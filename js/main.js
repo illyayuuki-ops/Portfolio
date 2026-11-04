@@ -93,6 +93,7 @@
     blip(open ? 660 : 520, .06);
   };
   radialBtn.addEventListener("click", () => radialSet(!radial.classList.contains("open")));
+  $(".radial__veil", radial).addEventListener("click", () => radialSet(false));
   document.addEventListener("pointerdown", e => {
     if (radial.classList.contains("open") && !radial.contains(e.target)) radialSet(false);
   });
