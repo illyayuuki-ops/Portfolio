@@ -41,8 +41,8 @@
   }, 1000);
 
   /* ------- page router ------- */
-  const ORDER = ["home","about","skills","projects","certificates","videos","contact"];
-  const links = $$(".snav-link");
+  const ORDER = ["home","about","skills","projects","certificates","videos","resume","contact"];
+  const links = $$(".r-item");
   const idxEl = $("#pageIdx");
   let current = null;
 
@@ -61,7 +61,7 @@
     const page = document.getElementById(id);
     page.classList.add("page-active");
     page.scrollTop = 0;
-    links.forEach(l => l.classList.toggle("active", l.dataset.section === id));
+    links.forEach(l => l.classList.toggle("active", l.dataset.rnav === id));
     idxEl.textContent = String(ORDER.indexOf(id) + 1).padStart(2, "0") + " / " + String(ORDER.length).padStart(2, "0");
     history.replaceState(null, "", "#" + id);
     if (!silent) blip(680 + ORDER.indexOf(id) * 50, .06);
@@ -78,7 +78,6 @@
   $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
     showPage(a.getAttribute("href").slice(1));
-    burger.classList.remove("open"); menu.classList.remove("open");
   }));
   addEventListener("keydown", e => {
     if (/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
@@ -86,15 +85,23 @@
     if (e.key === "ArrowLeft") step(-1);
   });
 
-  /* ------- drawer menu ------- */
-  const nav = $("#sideNav"), tab = $("#navTab"), navBackdrop = $("#navBackdrop"), navClose = $("#navPin");
-  const navOpen = () => { nav.classList.add("open"); tab.classList.add("hidden"); navBackdrop.classList.add("show"); blip(620, .06); };
-  const navShut = () => { nav.classList.remove("open"); tab.classList.remove("hidden"); navBackdrop.classList.remove("show"); blip(520, .05); };
-  tab.addEventListener("click", navOpen);
-  navClose.addEventListener("click", navShut);
-  navBackdrop.addEventListener("click", navShut);
-  links.forEach(l => l.addEventListener("click", navShut));
-  addEventListener("keydown", e => { if (e.key === "Escape" && nav.classList.contains("open")) navShut(); });
+  /* ------- radial orbit menu ------- */
+  const radial = $("#radial"), radialBtn = $("#radialBtn");
+  const radialSet = open => {
+    radial.classList.toggle("open", open);
+    radialBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    blip(open ? 660 : 520, .06);
+  };
+  radialBtn.addEventListener("click", () => radialSet(!radial.classList.contains("open")));
+  document.addEventListener("pointerdown", e => {
+    if (radial.classList.contains("open") && !radial.contains(e.target)) radialSet(false);
+  });
+  links.forEach(l => l.addEventListener("click", () => { radialSet(false); showPage(l.dataset.rnav); }));
+  addEventListener("keydown", e => {
+    if (/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if (e.key === "Escape") radialSet(false);
+    if (e.key === "m" || e.key === "M") radialSet(!radial.classList.contains("open"));
+  });
 
   /* ------- loader ------- */
   const pre = $("#preloader"), preCount = $("#preCount"), preBar = $("#preBar");
@@ -173,12 +180,6 @@
     numIO.unobserve(el);
   }), { threshold: .6 });
   $$("[data-count]").forEach(el => numIO.observe(el));
-
-  /* ------- mobile menu ------- */
-  const burger = $("#burger"), menu = $("#mobileMenu");
-  burger.addEventListener("click", () => {
-    burger.classList.toggle("open"); menu.classList.toggle("open"); blip(720, .05);
-  });
 
   /* ------- lightbox ------- */
   const lb = $("#lightbox"), lbImg = $("#lbImg");

@@ -44,44 +44,36 @@
   <div class="grain"></div>
 </div>
 
-<!-- ============ MENU TAB + DRAWER ============ -->
-<button class="nav-tab" id="navTab" aria-label="Open menu"><i></i><span class="nav-tab__txt">MENU</span><span class="nav-tab__arrow">▶</span></button>
-<div class="nav-backdrop" id="navBackdrop"></div>
-<aside class="side-nav" id="sideNav">
-  <button class="side-nav__close" id="navPin" aria-label="Close menu">✕</button>
-  <div class="side-nav__brand">◈ JRP</div>
-  <nav class="side-nav__links">
-    <a href="#home"         class="snav-link active" data-section="home"><i>01</i><em>Home</em></a>
-    <a href="#about"        class="snav-link" data-section="about"><i>02</i><em>Profile</em></a>
-    <a href="#skills"       class="snav-link" data-section="skills"><i>03</i><em>Skills</em></a>
-    <a href="#projects"     class="snav-link" data-section="projects"><i>04</i><em>Projects</em></a>
-    <a href="#certificates" class="snav-link" data-section="certificates"><i>05</i><em>Certificates</em></a>
-    <a href="#videos"       class="snav-link" data-section="videos"><i>06</i><em>Videos</em></a>
-    <a href="#contact"      class="snav-link" data-section="contact"><i>07</i><em>Contact</em></a>
-  </nav>
-  <div class="side-nav__socials">
-    <a href="https://github.com/illyayuuki-ops" target="_blank" aria-label="GitHub"> <!-- ✎ EDIT -->
-      <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
-    </a>
-    <a href="https://www.linkedin.com/in/john-raphael-gliane-6083ab270" target="_blank" aria-label="LinkedIn"> <!-- ✎ EDIT -->
-      <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.16h4.56V24H.22V8.16zM8.34 8.16h4.37v2.16h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.47 3.04 5.47 6.99V24h-4.55v-7.98c0-1.9-.04-4.35-2.65-4.35-2.65 0-3.06 2.07-3.06 4.21V24H8.34V8.16z"/></svg>
-    </a>
-    <a href="https://ph.jobstreet.com/profiles/johnraphael-pababero-lwmj9bdwfr" target="_blank" aria-label="JobStreet"> <!-- ✎ EDIT: your JobStreet profile URL -->
-      <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4C8.89 2 8 2.89 8 4v2H4C2.89 6 2 6.89 2 8v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2zm-8 4h12v2H6v-2z"/></svg>
-    </a>
-  </div>
-</aside>
+<!-- ============ RADIAL ORBIT MENU ============ -->
+<nav class="radial" id="radial" aria-label="Site navigation">
+  <div class="radial__ring radial__ring--outer" aria-hidden="true"></div>
+  <div class="radial__ring radial__ring--inner" aria-hidden="true"></div>
+  <button class="radial__core" id="radialBtn" aria-label="Open menu" aria-expanded="false"><span>◈</span></button>
+  <!-- pages — outer orbit -->
+  <button class="r-item" data-rnav="home"         style="--x:208px;--y:-27px" ><i>01</i><span>Home</span></button>
+  <button class="r-item" data-rnav="about"        style="--x:200px;--y:-64px" ><i>02</i><span>Profile</span></button>
+  <button class="r-item" data-rnav="skills"       style="--x:185px;--y:-99px" ><i>03</i><span>Skills</span></button>
+  <button class="r-item" data-rnav="projects"     style="--x:164px;--y:-131px"><i>04</i><span>Projects</span></button>
+  <button class="r-item" data-rnav="certificates" style="--x:138px;--y:-158px"><i>05</i><span>Certificates</span></button>
+  <button class="r-item" data-rnav="videos"       style="--x:107px;--y:-181px"><i>06</i><span>Videos</span></button>
+  <button class="r-item" data-rnav="resume"       style="--x:73px;--y:-197px" ><i>07</i><span>Résumé</span></button>
+  <button class="r-item" data-rnav="contact"      style="--x:36px;--y:-207px" ><i>08</i><span>Contact</span></button>
+  <!-- signals — inner orbit -->
+  <a class="r-soc" href="https://github.com/illyayuuki-ops" target="_blank" aria-label="GitHub" style="--x:136px;--y:-63px">
+    <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+  </a>
+  <a class="r-soc" href="https://www.linkedin.com/in/john-raphael-gliane-6083ab270" target="_blank" aria-label="LinkedIn" style="--x:106px;--y:-106px">
+    <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.16h4.56V24H.22V8.16zM8.34 8.16h4.37v2.16h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.47 3.04 5.47 6.99V24h-4.55v-7.98c0-1.9-.04-4.35-2.65-4.35-2.65 0-3.06 2.07-3.06 4.21V24H8.34V8.16z"/></svg>
+  </a>
+  <a class="r-soc" href="https://ph.jobstreet.com/profiles/johnraphael-pababero-lwmj9bdwfr" target="_blank" aria-label="JobStreet" style="--x:63px;--y:-136px">
+    <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4C8.89 2 8 2.89 8 4v2H4C2.89 6 2 6.89 2 8v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2zm-8 4h12v2H6v-2z"/></svg>
+  </a>
+</nav>
 
 <!-- mobile header -->
 <header class="mobile-header">
   <span class="mobile-header__logo">◈ JRP</span>
-  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
 </header>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#home">Home</a><a href="#about">Profile</a><a href="#skills">Skills</a>
-  <a href="#projects">Projects</a><a href="#certificates">Certificates</a>
-  <a href="#videos">Videos</a><a href="#contact">Contact</a>
-</div>
 
 <main class="main">
 
@@ -224,9 +216,35 @@
     </div>
   </section>
 
-  <!-- ============ 07 · CONTACT ============ -->
+  <!-- ============ 07 · RESUMÉ ============ -->
+  <section class="page section" id="resume">
+    <div class="label mono reveal"><span>07</span>RÉSUMÉ<i></i></div>
+    <h2 class="reveal">The <span class="accent">paper trail.</span></h2>
+    <div class="resume">
+      <figure class="resume__doc glass reveal" data-lightbox="assets/resume/resume-preview.jpg">
+        <img src="assets/resume/resume-preview.jpg" alt="Résumé preview">
+        <figcaption class="mono resume__doc-hint">▸ CLICK TO PREVIEW</figcaption>
+      </figure>
+      <div class="resume__body">
+        <h3 class="reveal">ATS-friendly · One page · Current</h3>
+        <p class="reveal">A concise single-page snapshot of my education, technical skills, projects, and eight verified certifications — formatted to pass applicant tracking systems cleanly.</p>
+        <div class="resume__stats mono reveal">
+          <div><b>BSIT</b><span>2024 — PRESENT</span></div>
+          <div><b>08</b><span>CERTIFICATIONS</span></div>
+          <div><b>3+</b><span>SHIPPED PROJECTS</span></div>
+        </div>
+        <div class="resume__btns reveal">
+          <a href="assets/resume/John_Raphael_Pababero_Resume.pdf" class="btn" download>↓ Download résumé (PDF)</a>
+          <a href="https://github.com/illyayuuki-ops/Portfolio" target="_blank" class="btn btn--ghost">View source ▹ GitHub</a>
+        </div>
+        <p class="resume__note mono reveal">HOW THIS SITE WAS MADE — Direction, architecture, and content by me; implemented with AI-assisted tooling. The full source is public on my GitHub — everything here can be explained, extended, and defended in a technical interview.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 08 · CONTACT ============ -->
   <section class="page section" id="contact">
-    <div class="label mono reveal"><span>07</span>CONTACT<i></i></div>
+    <div class="label mono reveal"><span>08</span>CONTACT<i></i></div>
     <div class="contact">
       <div class="contact__intro">
         <h2 class="reveal">Open to <span class="accent">OJT</span> &<br>collaboration.</h2>
