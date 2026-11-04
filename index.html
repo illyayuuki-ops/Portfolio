@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<!-- ============================================================
+  ✦ JOHN RAPHAEL G. PABABERO — Interactive 3D Portfolio
+  Minimal · Glassy · Techy — pure HTML/CSS/JS + Three.js (vendored)
+============================================================ -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>John Raphael Pababero — IT Portfolio</title>
+<meta name="description" content="Interactive 3D portfolio of John Raphael G. Pababero — BSIT student, web developer, networking specialist, and game developer.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◈</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div class="loader" id="preloader">
+  <div class="loader__inner">
+    <span class="loader__mark">◈</span>
+    <div class="loader__bar"><span id="preBar"></span></div>
+    <div class="loader__meta"><span id="preCount">00</span><em>INITIALIZING</em></div>
+  </div>
+</div>
+
+<!-- ============ CURSOR ============ -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <span class="topbar__id">JRP // PORTFOLIO_26</span>
+  <nav class="topbar__meta">
+    <span class="mono" id="clock">--:--:--</span>
+    <button class="snd" id="soundBtn">SOUND <b id="soundState">ON</b></button>
+  </nav>
+</header>
+
+<!-- ============ AMBIENT ============ -->
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb--1"></div><div class="orb orb--2"></div>
+  <div class="grain"></div>
+</div>
+
+<!-- ============ MENU TAB + DRAWER ============ -->
+<button class="nav-tab" id="navTab" aria-label="Open menu"><i></i><span class="nav-tab__txt">MENU</span><span class="nav-tab__arrow">▶</span></button>
+<div class="nav-backdrop" id="navBackdrop"></div>
+<aside class="side-nav" id="sideNav">
+  <button class="side-nav__close" id="navPin" aria-label="Close menu">✕</button>
+  <div class="side-nav__brand">◈ JRP</div>
+  <nav class="side-nav__links">
+    <a href="#home"         class="snav-link active" data-section="home"><i>01</i><em>Home</em></a>
+    <a href="#about"        class="snav-link" data-section="about"><i>02</i><em>Profile</em></a>
+    <a href="#skills"       class="snav-link" data-section="skills"><i>03</i><em>Skills</em></a>
+    <a href="#projects"     class="snav-link" data-section="projects"><i>04</i><em>Projects</em></a>
+    <a href="#certificates" class="snav-link" data-section="certificates"><i>05</i><em>Certificates</em></a>
+    <a href="#videos"       class="snav-link" data-section="videos"><i>06</i><em>Videos</em></a>
+    <a href="#contact"      class="snav-link" data-section="contact"><i>07</i><em>Contact</em></a>
+  </nav>
+  <div class="side-nav__socials">
+    <a href="https://github.com/illyayuuki-ops" target="_blank" aria-label="GitHub"> <!-- ✎ EDIT -->
+      <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/john-raphael-gliane-6083ab270" target="_blank" aria-label="LinkedIn"> <!-- ✎ EDIT -->
+      <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.16h4.56V24H.22V8.16zM8.34 8.16h4.37v2.16h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.47 3.04 5.47 6.99V24h-4.55v-7.98c0-1.9-.04-4.35-2.65-4.35-2.65 0-3.06 2.07-3.06 4.21V24H8.34V8.16z"/></svg>
+    </a>
+    <a href="https://ph.jobstreet.com/profiles/johnraphael-pababero-lwmj9bdwfr" target="_blank" aria-label="JobStreet"> <!-- ✎ EDIT: your JobStreet profile URL -->
+      <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4C8.89 2 8 2.89 8 4v2H4C2.89 6 2 6.89 2 8v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2zm-8 4h12v2H6v-2z"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- mobile header -->
+<header class="mobile-header">
+  <span class="mobile-header__logo">◈ JRP</span>
+  <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+</header>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#home">Home</a><a href="#about">Profile</a><a href="#skills">Skills</a>
+  <a href="#projects">Projects</a><a href="#certificates">Certificates</a>
+  <a href="#videos">Videos</a><a href="#contact">Contact</a>
+</div>
+
+<main class="main">
+
+  <!-- ============ 01 · HOME (3D crystal) ============ -->
+  <section class="page hero page-active" id="home">
+    <canvas id="crystalCanvas" class="hero__3d"></canvas>
+    <div class="hero__drag-hint mono" id="dragHint">⟲ DRAG TO ROTATE</div>
+
+    <div class="hero__content">
+      <p class="mono dim reveal">JOHN RAPHAEL G. PABABERO — BSIT III — LCC TANAUAN</p>
+      <h1 class="hero__title">
+        <span class="split">WEB</span>
+        <span class="split">DEVELOPER <em class="accent">&amp;</em></span>
+        <span class="split">BUILDER.</span>
+      </h1>
+      <p class="hero__sub reveal">I design and build clean, functional digital systems — from
+        full-stack web applications to networks and games.</p>
+      <div class="hero__role mono reveal"><span>▸</span> <span id="typedRole"></span><span class="caret">_</span></div>
+      <div class="hero__cta reveal">
+        <a href="#projects" class="btn">Projects →</a>
+        <a href="assets/resume/John_Raphael_Pababero_Resume.pdf" class="btn btn--ghost" download>↓ Résumé</a>
+        <a href="#contact" class="btn btn--ghost">Contact</a>
+      </div>
+    </div>
+
+    <div class="hero__stats mono">
+      <div><b data-count="4">0</b><span>PROJECTS</span></div>
+      <div><b data-count="8">0</b><span>CERTIFICATES</span></div>
+      <div><b data-count="12">0</b><span>TECHNOLOGIES</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 02 · PROFILE ============ -->
+  <section class="page section" id="about">
+    <div class="label mono reveal"><span>02</span>PROFILE<i></i></div>
+    <div class="about">
+      <figure class="about__photo glass reveal">
+        <img src="assets/images/profile.svg" alt="John Raphael Pababero"> <!-- ✎ EDIT: your photo -->
+        <figcaption class="mono">BSIT III · SEEKING OJT</figcaption>
+      </figure>
+      <div class="about__body">
+        <h2 class="reveal">Systems, built<br><span class="accent">with intention.</span></h2>
+        <p class="reveal">I'm <b>John Raphael G. Pababero</b>, a third-year BS Information Technology student at La Consolacion College Tanauan with hands-on experience in <b>web development (PHP, JavaScript, PostgreSQL)</b>, networking, and game development.</p>
+        <p class="reveal">I've shipped an inventory-tracking web application and a library computer-monitoring system for my institution, and earned eight Cisco Networking Academy and programming certifications along the way. I'm currently looking for an <b>OJT position</b> where I can contribute to a real IT or software development team.</p>
+        <div class="abilities mono reveal">
+          <span class="abilities__title accent">CORE ABILITIES — </span>
+          <span>▸ Full-stack web apps</span><span>▸ Relational database design</span><span>▸ Network setup & security</span><span>▸ Desktop system tools</span><span>▸ Game development</span><span>▸ 3D modeling & animation</span>
+        </div>
+        <dl class="about__grid glass mono reveal">
+          <div><dt>NAME</dt><dd>John Raphael G. Pababero</dd></div>
+          <div><dt>PROGRAM</dt><dd>BS Information Technology</dd></div>
+          <div><dt>SCHOOL</dt><dd>La Consolacion College Tanauan</dd></div>
+          <div><dt>BASE</dt><dd>Sto. Tomas, Batangas, PH</dd></div>
+        </dl>
+        <div class="timeline mono">
+          <div class="reveal"><i>2024</i><p><b>Began BSIT</b> at LCC Tanauan — programming & systems fundamentals.</p></div>
+          <div class="reveal"><i>2025</i><p><b>C / C++ certified</b> via CodeChum · began full-stack builds in PHP & MySQL.</p></div>
+          <div class="reveal"><i>2026</i><p><b>Six Cisco certifications</b> earned — now OJT-ready.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 · SKILLS ============ -->
+  <section class="page section" id="skills">
+    <div class="label mono reveal"><span>03</span>SKILLS<i></i></div>
+    <h2 class="reveal">What I <span class="accent">work with.</span></h2>
+    <div class="skillrows">
+      <div class="skillrow glass reveal"><span class="mono">PHP</span><div class="track"><b data-level="88"></b></div><em class="mono">88</em></div>
+      <div class="skillrow glass reveal"><span class="mono">Networking & Security</span><div class="track"><b data-level="86"></b></div><em class="mono">86</em></div>
+      <div class="skillrow glass reveal"><span class="mono">JavaScript / TypeScript</span><div class="track"><b data-level="84"></b></div><em class="mono">84</em></div>
+      <div class="skillrow glass reveal"><span class="mono">PostgreSQL / MySQL</span><div class="track"><b data-level="80"></b></div><em class="mono">80</em></div>
+      <div class="skillrow glass reveal"><span class="mono">C / C++</span><div class="track"><b data-level="80"></b></div><em class="mono">80</em></div>
+      <div class="skillrow glass reveal"><span class="mono">Python · Flutter · Dart</span><div class="track"><b data-level="74"></b></div><em class="mono">74</em></div>
+    </div>
+    <div class="chips mono reveal">
+      <span>HTML5</span><span>CSS3</span><span>Git / GitHub</span><span>Cisco Packet Tracer</span><span>Blender</span><span>VS Code</span><span>Cursor</span><span>XAMPP / Laragon</span>
+    </div>
+
+    <h3 class="mono label-mini reveal"><span class="accent">—</span> WHAT I CAN DELIVER</h3>
+    <div class="cap-grid">
+      <div class="cap glass reveal"><b>Full-Stack Web Applications</b><p>End-to-end systems with PHP back-ends, JavaScript front-ends, secure authentication, and real-time dashboards.</p></div>
+      <div class="cap glass reveal"><b>Database Design</b><p>Normalized relational schemas in PostgreSQL/MySQL, optimized queries, and rock-solid data integrity.</p></div>
+      <div class="cap glass reveal"><b>Network Configuration</b><p>IP addressing, routing & switching, and structured troubleshooting — Cisco Academy trained & certified.</p></div>
+      <div class="cap glass reveal"><b>System & Desktop Tools</b><p>Client-server utilities with logging and reporting, such as the library monitoring system deployed at LCCT.</p></div>
+      <div class="cap glass reveal"><b>Game Development</b><p>Playable builds with Flutter/Dart & JavaScript — mechanics, physics, and custom pixel-art animation.</p></div>
+      <div class="cap glass reveal"><b>3D & Interactive Media</b><p>Blender-modeled assets and real-time WebGL/Three.js experiences — this portfolio is the live demo.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 04 · PROJECTS (3D carousel) ============ -->
+  <section class="page section section--carousel" id="projects">
+    <div class="label mono reveal"><span>04</span>PROJECTS<i></i></div>
+    <h2 class="reveal">Drag through the <span class="accent">work.</span></h2>
+
+    <div class="carousel">
+      <canvas id="carouselCanvas"></canvas>
+      <div class="carousel__hint mono" id="carouselHint">⟲ DRAG THE RING</div>
+      <button class="carousel__btn glass mono" id="carPrev" aria-label="Previous">←</button>
+      <button class="carousel__btn glass mono" id="carNext" aria-label="Next">→</button>
+    </div>
+
+    <div class="carousel__info glass reveal" id="carInfo">
+      <div class="carousel__meta mono"><span id="carIdx">01 / 03</span><span id="carRole">FULL-STACK</span></div>
+      <h3 id="carTitle">Ingredient Tracking System</h3>
+      <p id="carDesc">Inventory & dish-recommendation web application with secure auth and real-time stock logic.</p>
+      <div class="tags mono" id="carTags"><span>PHP</span><span>MySQL</span><span>PostgreSQL</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 05 · CERTIFICATES ============ -->
+  <section class="page section" id="certificates">
+    <div class="label mono reveal"><span>05</span>CERTIFICATES<i></i></div>
+    <h2 class="reveal">Verified <span class="accent">credentials.</span></h2>
+    <div class="certs">
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-1.jpg"><img src="assets/certificates/cert-1.jpg" alt="HTML Essentials"><figcaption><b>HTML Essentials</b><span class="mono">DICT-ITU · Cisco NetAcad — AUG 2026</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-5.jpg"><img src="assets/certificates/cert-5.jpg" alt="Networking Basics"><figcaption><b>Networking Basics</b><span class="mono">Cisco NetAcad — APR 2026</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-2.jpg"><img src="assets/certificates/cert-2.jpg" alt="Network Addressing"><figcaption><b>Network Addressing & Troubleshooting</b><span class="mono">Cisco NetAcad — APR 2026</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-6.jpg"><img src="assets/certificates/cert-6.jpg" alt="Networking Devices"><figcaption><b>Networking Devices & Configuration</b><span class="mono">Cisco NetAcad — APR 2026</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-3.jpg"><img src="assets/certificates/cert-3.jpg" alt="Network Support"><figcaption><b>Network Support & Security</b><span class="mono">Cisco NetAcad — APR 2026</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-4.jpg"><img src="assets/certificates/cert-4.jpg" alt="Network Technician"><figcaption><b>Network Technician Career Path</b><span class="mono">Cisco NetAcad — APR 2026</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-7.jpg"><img src="assets/certificates/cert-7.jpg" alt="C++ Programming"><figcaption><b>C++ Programming 1</b><span class="mono">CodeChum / LCCT — NOV 2025</span></figcaption></figure>
+      <figure class="cert glass reveal" data-lightbox="assets/certificates/cert-8.jpg"><img src="assets/certificates/cert-8.jpg" alt="C Programming"><figcaption><b>C Programming 1</b><span class="mono">CodeChum / LCCT — MAY 2025</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ 06 · VIDEOS ============ -->
+  <section class="page section" id="videos">
+    <div class="label mono reveal"><span>06</span>VIDEOS<i></i></div>
+    <h2 class="reveal">Project <span class="accent">demos.</span></h2>
+    <div class="videos">
+      <div class="vid glass reveal">
+        <div class="vid__frame"><video controls preload="metadata" poster="assets/images/video-poster.svg"><source src="assets/videos/demo-1.mp4" type="video/mp4"></video></div> <!-- ✎ EDIT -->
+        <h3>Ingredient Tracking System</h3><p class="mono">MEDIA SLOT 01 — drop demo-1.mp4 in assets/videos/</p>
+      </div>
+      <div class="vid glass reveal">
+        <div class="vid__frame"><video controls preload="metadata" poster="assets/images/video-poster.svg"><source src="assets/videos/demo-2.mp4" type="video/mp4"></video></div> <!-- ✎ EDIT -->
+        <h3>Aether LMS — LCCTlibTrack</h3><p class="mono">MEDIA SLOT 02 — drop demo-2.mp4 in assets/videos/</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 · CONTACT ============ -->
+  <section class="page section" id="contact">
+    <div class="label mono reveal"><span>07</span>CONTACT<i></i></div>
+    <div class="contact">
+      <div class="contact__intro">
+        <h2 class="reveal">Open to <span class="accent">OJT</span> &<br>collaboration.</h2>
+        <p class="reveal">I'm seeking an On-the-Job Training position and open to junior development work. Reach out — I answer professional inquiries promptly.</p>
+        <ul class="mono contact__list reveal">
+          <li><span>EMAIL</span><a href="mailto:johnraphael030306@gmail.com">johnraphael030306@gmail.com</a></li>
+          <li><span>PHONE</span><b>+63 955 158 7463</b></li>
+          <li><span>BASE</span><b>Sto. Tomas, Batangas, PH</b></li>
+          <li><span>GITHUB</span><a href="https://github.com/illyayuuki-ops" target="_blank">github.com/illyayuuki-ops</a></li> <!-- ✎ EDIT -->
+          <li><span>JOBSTREET</span><a href="https://ph.jobstreet.com/profiles/johnraphael-pababero-lwmj9bdwfr" target="_blank">ph.jobstreet.com/profiles/johnraphael-pababero</a></li>
+          <li><span>RÉSUMÉ</span><a href="assets/resume/John_Raphael_Pababero_Resume.pdf" download>Download PDF ↓</a></li>
+        </ul>
+      </div>
+      <form class="contact__form glass reveal" id="contactForm">
+        <label class="mono">NAME<input type="text" id="cName" placeholder="Your name" required></label>
+        <label class="mono">EMAIL<input type="email" id="cEmail" placeholder="Your email" required></label>
+        <label class="mono">MESSAGE<textarea id="cMsg" rows="4" placeholder="Write your message…" required></textarea></label>
+        <button class="btn" type="submit">Send →</button>
+      </form>
+    </div>
+    <footer class="footer mono reveal"><span>◈ JRP — © 2026</span><a href="#home">Back to start ↑</a></footer>
+  </section>
+
+</main>
+
+<!-- ============ PAGE NAV ============ -->
+<div class="pagenav mono">
+  <button id="prevPage" aria-label="Previous">←</button>
+  <span id="pageIdx">01 / 07</span>
+  <button id="nextPage" aria-label="Next">→</button>
+</div>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox"><button id="lbClose" aria-label="Close">✕</button><img src="" alt="Preview" id="lbImg"></div>
+
+<script src="js/vendor/three.min.js"></script>
+<script src="js/three-scenes.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

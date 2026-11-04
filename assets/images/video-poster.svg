@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a2a6b"/><stop offset=".55" stop-color="#2568ff"/><stop offset="1" stop-color="#46d5ff"/>
+    </linearGradient>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".28"/><stop offset=".25" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#g)"/>
+  <circle cx="1024" cy="144" r="426" fill="#8ef0ff" opacity=".14"/>
+  <circle cx="213" cy="576" r="640" fill="#ffffff" opacity=".08"/>
+  <rect width="640" height="720" fill="url(#s)" transform="skewX(-12)"/>
+  <text x="50%" y="354" font-family="Segoe UI, Arial" font-size="80" font-weight="700" fill="#ffffff" text-anchor="middle" opacity=".95">VIDEO</text>
+  <text x="50%" y="420" font-family="Segoe UI, Arial" font-size="37" fill="#cfe9ff" text-anchor="middle" letter-spacing="2">add assets/videos/demo-1.mp4</text>
+  <text x="50%" y="504" font-family="Segoe UI, Arial" font-size="42" fill="#8ef0ff" text-anchor="middle">▶</text>
+</svg>

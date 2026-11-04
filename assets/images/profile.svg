@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0a2a6b"/><stop offset=".55" stop-color="#2568ff"/><stop offset="1" stop-color="#46d5ff"/>
+    </linearGradient>
+    <linearGradient id="s" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".28"/><stop offset=".25" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#g)"/>
+  <circle cx="640" cy="200" r="266" fill="#8ef0ff" opacity=".14"/>
+  <circle cx="133" cy="800" r="400" fill="#ffffff" opacity=".08"/>
+  <rect width="400" height="1000" fill="url(#s)" transform="skewX(-12)"/>
+  <text x="50%" y="494" font-family="Segoe UI, Arial" font-size="50" font-weight="700" fill="#ffffff" text-anchor="middle" opacity=".95">YOUR PHOTO</text>
+  <text x="50%" y="583" font-family="Segoe UI, Arial" font-size="23" fill="#cfe9ff" text-anchor="middle" letter-spacing="2">replace this file with profile.jpg</text>
+  <text x="50%" y="700" font-family="Segoe UI, Arial" font-size="26" fill="#8ef0ff" text-anchor="middle">✦</text>
+</svg>
