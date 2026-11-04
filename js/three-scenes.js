@@ -148,6 +148,56 @@
   })();
 
   /* ============================================================
+     SCENE C — NAV GEM — a tiny live 3D diamond as the menu core
+     Spins idle, flashes + bursts of spin when the menu opens.
+     Falls back to the ◈ glyph if WebGL is unavailable.
+  ============================================================ */
+  (() => {
+    const cv = document.getElementById("gemCanvas");
+    const core = document.getElementById("radialBtn");
+    if (!cv || !core) return;
+    try {
+      const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: true });
+      renderer.setSize(72, 72, false);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      const scene = new THREE.Scene();
+      const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 10);
+      cam.position.z = 3.2;
+
+      const gem = new THREE.Group();
+      const geo = new THREE.OctahedronGeometry(0.95, 0);                 // a real diamond = octahedron
+      const solidMat = new THREE.MeshPhongMaterial({ color: 0x0d2c3e, emissive: 0x0b3b52, transparent: true, opacity: 0.55, shininess: 90 });
+      const wireMat  = new THREE.LineBasicMaterial({ color: SKY, transparent: true });
+      const solid = new THREE.Mesh(geo, solidMat);
+      const wire  = new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireMat);
+      gem.add(solid); gem.add(wire); scene.add(gem);
+
+      scene.add(new THREE.AmbientLight(0x9fd9ff, 0.9));
+      const l1 = new THREE.DirectionalLight(0xffffff, 1.1); l1.position.set(2, 3, 4); scene.add(l1);
+      const l2 = new THREE.DirectionalLight(SKY, 0.8);      l2.position.set(-3, -2, -2); scene.add(l2);
+
+      let energy = 0, t0 = performance.now();
+      window.__gemShine = () => { energy = 1; };           // main.js calls this when the menu opens
+      core.classList.add("gl");                            // swap ◈ glyph for live WebGL
+
+      function frame(t) {
+        const dt = Math.min((t - t0) / 1000, 0.05); t0 = t;
+        energy *= 1 - dt * 1.7; if (energy < 0.001) energy = 0;
+        const pop = 1 + energy * 0.22 * Math.sin(Math.min(energy, 1) * Math.PI);
+        gem.rotation.y += dt * (0.7 + energy * 6.5);
+        gem.rotation.x = 0.38 + Math.sin(t / 1500) * 0.08;  // gentle float
+        gem.position.y = Math.sin(t / 1100) * 0.05;
+        gem.scale.setScalar(pop);
+        wireMat.opacity = 0.85 + energy * 0.15;
+        solidMat.emissive.setRGB(0.04 + energy * 0.15, 0.23 + energy * 0.3, 0.32 + energy * 0.35);
+        renderer.render(scene, cam);
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(f => { t0 = f; frame(f); });
+    } catch (e) { /* WebGL missing — the ◈ glyph remains */ }
+  })();
+
+/* ============================================================
      SCENE B — PROJECT CAROUSEL (drag the ring, snap to card)
   ============================================================ */
   (() => {

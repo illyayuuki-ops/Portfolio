@@ -16,6 +16,9 @@
 </head>
 <body>
 
+<!-- ============ SCAN-SWEEP PAGE TRANSITION ============ -->
+<div id="scan" class="scan" aria-hidden="true"></div>
+
 <!-- ============ LOADER ============ -->
 <div class="loader" id="preloader">
   <div class="loader__inner">
@@ -49,7 +52,7 @@
   <div class="radial__veil" aria-hidden="true"></div>
   <div class="radial__ring radial__ring--outer" aria-hidden="true"></div>
   <div class="radial__ring radial__ring--inner" aria-hidden="true"></div>
-  <button class="radial__core" id="radialBtn" aria-label="Open menu" aria-expanded="false"><span>◈</span></button>
+  <button class="radial__core" id="radialBtn" aria-label="Open menu" aria-expanded="false"><span class="radial__glyph">◈</span><canvas id="gemCanvas" width="144" height="144" aria-hidden="true"></canvas></button>
   <!-- pages — outer orbit -->
   <button class="r-item" data-rnav="home"         style="--x:208px;--y:-27px" ><i>01</i><span>Home</span></button>
   <button class="r-item" data-rnav="about"        style="--x:200px;--y:-64px" ><i>02</i><span>Profile</span></button>
@@ -266,7 +269,11 @@
         <button class="btn" type="submit">Send →</button>
       </form>
     </div>
-    <footer class="footer mono reveal"><span>◈ JRP — © 2026</span><a href="#home">Back to start ↑</a></footer>
+    <footer class="footer mono reveal">
+      <span>◈ JRP — © 2026</span>
+      <a class="gchip" id="gitChip" href="https://github.com/illyayuuki-ops/Portfolio/commits/main" target="_blank" title="Latest commit on GitHub"><i class="gchip__dot"></i>GIT · SYNCING…</a>
+      <a href="#home">Back to start ↑</a>
+    </footer>
   </section>
 
 </main>

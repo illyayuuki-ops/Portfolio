@@ -54,9 +54,16 @@
     });
   };
 
+  const scanEl = $("#scan");
+  function scanSweep() {
+    if (!scanEl) return;
+    scanEl.classList.remove("on"); void scanEl.offsetWidth;
+    scanEl.classList.add("on");
+    setTimeout(() => scanEl.classList.remove("on"), 800);
+  }
   function showPage(id, silent = false) {
     if (!ORDER.includes(id) || id === current) return;
-    if (current) document.getElementById(current).classList.remove("page-active");
+    if (current) { scanSweep(); document.getElementById(current).classList.remove("page-active"); }
     current = id;
     const page = document.getElementById(id);
     page.classList.add("page-active");
@@ -91,6 +98,13 @@
     radial.classList.toggle("open", open);
     radialBtn.setAttribute("aria-expanded", open ? "true" : "false");
     blip(open ? 660 : 520, .06);
+    if (open) {                                   // diamond glints, then bursts into shards
+      window.__gemShine && window.__gemShine();
+      radialBtn.classList.remove("shine");
+      void radialBtn.offsetWidth;                  // restart the beam animation
+      radialBtn.classList.add("shine");
+      setTimeout(() => radialBtn.classList.remove("shine"), 750);
+    }
   };
   radialBtn.addEventListener("click", () => radialSet(!radial.classList.contains("open")));
   $(".radial__veil", radial).addEventListener("click", () => radialSet(false));
@@ -205,6 +219,40 @@
     host.innerHTML = `<div class="video-missing"><div class="pm">▶</div>
       <b>MEDIA SLOT READY</b><code>${src ? src.getAttribute("src") : "assets/videos/demo.mp4"}</code></div>`;
   }
+
+  /* ------- magnetic UI ------- */
+  if (fine) {
+    $$(".btn, .radial__core, .r-item, .r-soc, .snd, .gchip, .pagenav button").forEach(el => {
+      el.classList.add("magnetic");
+      el.addEventListener("pointermove", e => {
+        const r = el.getBoundingClientRect();
+        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+        el.classList.add("on");
+        el.style.translate = (dx * .28) + "px " + (dy * .28) + "px";
+      });
+      el.addEventListener("pointerleave", () => { el.classList.remove("on"); el.style.translate = ""; });
+    });
+  }
+
+  /* ------- live git chip (public GitHub API, read-only) ------- */
+  (() => {
+    const gc = $("#gitChip"); if (!gc) return;
+    const dot = '<i class="gchip__dot"></i>';
+    const ago = d => {
+      const s = (Date.now() - d) / 1000;
+      if (s < 3600) return Math.max(1, Math.floor(s / 60)) + "m ago";
+      if (s < 86400) return Math.floor(s / 3600) + "h ago";
+      return Math.floor(s / 86400) + "d ago";
+    };
+    fetch("https://api.github.com/repos/illyayuuki-ops/Portfolio/commits?per_page=1")
+      .then(r => r.json())
+      .then(a => {
+        const c = a && a[0];
+        if (!c || !c.sha) throw 0;
+        gc.innerHTML = dot + "GIT · " + c.sha.slice(0, 7).toUpperCase() + " · " + ago(new Date(c.commit.committer.date));
+      })
+      .catch(() => { gc.innerHTML = dot + "GIT · MAIN BRANCH"; });
+  })();
 
   /* ------- contact form ------- */
   const ME = "johnraphael030306@gmail.com";
