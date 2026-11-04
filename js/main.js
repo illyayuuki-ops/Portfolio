@@ -69,7 +69,8 @@
     page.classList.add("page-active");
     page.scrollTop = 0;
     links.forEach(l => l.classList.toggle("active", l.dataset.rnav === id));
-    idxEl.textContent = String(ORDER.indexOf(id) + 1).padStart(2, "0") + " / " + String(ORDER.length).padStart(2, "0");
+    if (idxEl) idxEl.textContent = String(ORDER.indexOf(id) + 1).padStart(2, "0") + " / " + String(ORDER.length).padStart(2, "0");
+    edgeSync(ORDER.indexOf(id));
     history.replaceState(null, "", "#" + id);
     if (!silent) blip(680 + ORDER.indexOf(id) * 50, .06);
     window.__P3 && window.__P3.setActive(id);       // activate its 3D scene
@@ -80,8 +81,9 @@
   }
 
   const step = d => showPage(ORDER[(ORDER.indexOf(current) + d + ORDER.length) % ORDER.length]);
-  $("#prevPage").addEventListener("click", () => step(-1));
-  $("#nextPage").addEventListener("click", () => step(1));
+  const pp = $("#prevPage"), pn = $("#nextPage");
+  pp && pp.addEventListener("click", () => step(-1));
+  pn && pn.addEventListener("click", () => step(1));
   $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
     showPage(a.getAttribute("href").slice(1));
@@ -91,6 +93,55 @@
     if (e.key === "ArrowRight") step(1);
     if (e.key === "ArrowLeft") step(-1);
   });
+
+  /* ------- edge facets — candy-wrap rails ------- */
+  const NAV_NAMES = {home:"HOME",about:"PROFILE",skills:"SKILLS",projects:"PROJECTS",certificates:"CERTIFICATES",videos:"VIDEOS",resume:"RÉSUMÉ",contact:"CONTACT"};
+  const edgePrev = $("#edgePrev"), edgeNext = $("#edgeNext");
+  const tagPrev = $("#tagPrev"), tagNext = $("#tagNext");
+  edgePrev && edgePrev.addEventListener("click", () => step(-1));
+  edgeNext && edgeNext.addEventListener("click", () => step(1));
+  function edgeSync(idx) {
+    if (!edgePrev || !edgeNext) return;
+    const prevI = (idx - 1 + ORDER.length) % ORDER.length;
+    const nextI = (idx + 1) % ORDER.length;
+    if (tagPrev) tagPrev.textContent = "PREV · " + NAV_NAMES[ORDER[prevI]];
+    if (tagNext) tagNext.textContent = "NEXT · " + NAV_NAMES[ORDER[nextI]];
+    const lit = Math.ceil((idx) / 2);                              // pages fill the rails as you climb
+    edgePrev.querySelectorAll(".ef").forEach((f, i) => f.classList.toggle("lit", 3 - i < lit));
+    edgeNext.querySelectorAll(".ef").forEach((f, i) => f.classList.toggle("lit", 3 - i < lit));
+  }
+  edgeSync(0);
+
+  /* ------- ENTER the command deck (crystal shatter) ------- */
+  window.__enterDeck = () => {
+    if (window.__deckEntered) return;                         // one shatter per visit-home
+    window.__deckEntered = true; setTimeout(() => window.__deckEntered = false, 900);
+    blip(880, .09); setTimeout(() => blip(1200, .07), 140);
+    window.__shatterCrystal && window.__shatterCrystal();
+    setTimeout(() => showPage("about"), 680);
+  };
+  const enterBtn = $("#enterBtn");
+  enterBtn && enterBtn.addEventListener("click", window.__enterDeck);
+
+  /* ------- space particles (stars + drifting hexagons) ------- */
+  (() => {
+    const c = $("#spaceCanvas"); if (!c) return;
+    const ctx = c.getContext("2d");
+    let W, H; const size = () => { W = c.width = innerWidth; H = c.height = innerHeight; };
+    size(); addEventListener("resize", size);
+    const stars = [], hexes = [];
+    for (let i = 0; i < 130; i++) stars.push({x:Math.random(),y:Math.random(),r:Math.random()*1.5+0.4,tw:Math.random()*6.28,sp:Math.random()*0.25+0.08});
+    for (let i = 0; i < 15; i++) hexes.push({x:Math.random(),y:Math.random(),s:Math.random()*15+8,rot:Math.random()*6.28,vr:(Math.random()-.5)*0.0024,vx:(Math.random()-.5)*0.00009,vy:(Math.random()-.5)*0.00009,col:Math.random()<.6?"94,227,255":"170,220,255"});
+    let t = 0;
+    const hex = s => { ctx.beginPath(); for(let k=0;k<6;k++){const a=s.rot+k*1.047;ctx[k?"lineTo":"moveTo"](Math.cos(a)*s.s,Math.sin(a)*s.s);} ctx.closePath(); ctx.stroke(); };
+    (function loop(){ t++;
+      ctx.clearRect(0,0,W,H);
+      for (const s of hexes){ s.x=(s.x+1+s.vx)%1; s.y=(s.y+1+s.vy)%1; s.rot+=s.vr;
+        ctx.save(); ctx.translate(s.x*W,s.y*H); ctx.strokeStyle=`rgba(${s.col},.13)`; ctx.lineWidth=1; hex(s); ctx.restore(); }
+      for (const s of stars){ const a=.22+.6*Math.abs(Math.sin(t/58*s.sp+s.tw)); ctx.fillStyle=`rgba(214,240,255,${a.toFixed(3)})`; ctx.fillRect(s.x*W,s.y*H,s.r,s.r); }
+      requestAnimationFrame(loop);
+    })();
+  })();
 
   /* ------- radial orbit menu ------- */
   const radial = $("#radial"), radialBtn = $("#radialBtn");
@@ -145,7 +196,7 @@
   const typedEl = $("#typedRole");
   let ri = 0, ci = 0, del = false, typedOn = false;
   function startTyped() {
-    if (typedOn) return; typedOn = true;
+    if (!typedEl || typedOn) return; typedOn = true;
     const type = () => {
       const w = roles[ri];
       ci += del ? -1 : 1;

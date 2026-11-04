@@ -89,13 +89,20 @@
     let tiltX = 0, tiltY = 0, tTX = 0, tTY = 0;
     const hint = document.getElementById("dragHint");
 
+    let tapX = 0, tapY = 0, tapT = 0;
     canvas.addEventListener("pointerdown", e => {
       dragging = true; px = e.clientX; py = e.clientY;
+      tapX = e.clientX; tapY = e.clientY; tapT = performance.now();
       canvas.setPointerCapture(e.pointerId);
       canvas.style.cursor = "grabbing";
       if (hint) hint.style.opacity = 0;
     });
-    addEventListener("pointerup", () => { dragging = false; canvas.style.cursor = ""; });
+    canvas.addEventListener("pointerup", e => {
+      dragging = false; canvas.style.cursor = "";
+      // a clean tap (not a drag) = CLICK ME → shatter & enter the deck
+      const d = Math.hypot(e.clientX - tapX, e.clientY - tapY);
+      if (d < 8 && performance.now() - tapT < 420) window.__enterDeck && window.__enterDeck();
+    });
     canvas.addEventListener("pointermove", e => {
       if (dragging) {
         velY = (e.clientX - px) * 0.006;
@@ -116,9 +123,9 @@
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       const wide = w > 900;
-      group.position.x = wide ? w / h * 0.85 : 0;
-      group.position.y = wide ? 0 : 0.9;
-      group.scale.setScalar(wide ? 1 : 0.72);
+      group.position.x = 0;                  // crystal owns the center of the universe
+      group.position.y = wide ? 0 : 0.15;
+      group.scale.setScalar(wide ? 1.06 : 0.78);
     };
     fit();
     addEventListener("resize", fit);
@@ -127,6 +134,7 @@
     (function loop() {
       requestAnimationFrame(loop);
       if (!active.home) return;
+      if (broken) window.__restoreCrystal();       // crystal reforms every time you come home
       const t = clock.getElapsedTime();
 
       if (!dragging) {
@@ -142,8 +150,57 @@
       rings[0].rotation.y = t * 0.35; rings[1].rotation.y = -t * 0.22;
       points.rotation.y = t * 0.03;
 
+      // ---- shatter animation ----
+      if (broken) { group.visible = false; }
+      if (shatterStart >= 0) {
+        const p = (t - shatterStart) / 1.05;
+        if (p <= 0.14) group.scale.setScalar((wideScale) * (1 + p * 1.1));   // quick pop
+        if (p >= 0.14) group.visible = false;
+        if (p < 1) {
+          const a = burst.geo.attributes.position.array, dt = 1 / 60;
+          for (let i = 0; i < a.length; i += 3) {
+            a[i] += burst.vel[i] * dt; a[i + 1] += burst.vel[i + 1] * dt; a[i + 2] += burst.vel[i + 2] * dt;
+          }
+          burst.geo.attributes.position.needsUpdate = true;
+          burst.mesh.material.opacity = 1 - p;
+          burst.mesh.material.size = 0.07 * (1 - p * 0.5);
+          burst.mesh.rotation.copy(group.rotation);
+        } else {
+          scene.remove(burst.mesh); burst = null; shatterStart = -2;
+          group.visible = false; broken = true; canvas.style.opacity = 0;
+        }
+      }
+
       renderer.render(scene, camera);
     })();
+
+    // ---- crystal shatter API (ENTER button) ----
+    let shatterStart = -3, burst = null, broken = false;
+    const wideScale = () => innerWidth > 900 ? 1 : 0.72;
+    window.__shatterCrystal = () => {
+      if (shatterStart !== -3 || broken) return;
+      const pts = [];
+      const addG = g => { const a = g.attributes.position; for (let i = 0; i < a.count; i++) pts.push(a.getX(i), a.getY(i), a.getZ(i)); };
+      addG(crystal.geometry); addG(core.geometry);
+      const bPos = new Float32Array(pts), bVel = new Float32Array(pts.length);
+      const v = new THREE.Vector3();
+      for (let i = 0; i < bPos.length; i += 3) {
+        v.set(bPos[i], bPos[i + 1], bPos[i + 2]).normalize();
+        const s = 1.7 + Math.random() * 2.4;
+        bVel[i] = v.x * s + (Math.random() - .5) * .7;
+        bVel[i + 1] = v.y * s + (Math.random() - .5) * .7;
+        bVel[i + 2] = v.z * s + (Math.random() - .5) * .7;
+      }
+      const bGeo = new THREE.BufferGeometry();
+      bGeo.setAttribute("position", new THREE.BufferAttribute(bPos, 3));
+      burst = { geo: bGeo, vel: bVel, mesh: new THREE.Points(bGeo, new THREE.PointsMaterial({ color: SKY, size: 0.07, transparent: true, opacity: 1 })) };
+      burst.mesh.position.copy(group.position); burst.mesh.scale.copy(group.scale);
+      scene.add(burst.mesh);
+      shatterStart = clock.getElapsedTime();
+    };
+    window.__restoreCrystal = () => {
+      broken = false; shatterStart = -3; group.visible = true; canvas.style.opacity = 1;
+    };
     window.__fitCrystal = fit;
   })();
 
