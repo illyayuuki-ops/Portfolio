@@ -47,31 +47,30 @@
   <div class="grain"></div>
 </div>
 
-<!-- ============ RADIAL ORBIT MENU ============ -->
-<nav class="radial" id="radial" aria-label="Site navigation">
-  <div class="radial__veil" aria-hidden="true"></div>
-  <div class="radial__ring radial__ring--outer" aria-hidden="true"></div>
-  <div class="radial__ring radial__ring--inner" aria-hidden="true"></div>
-  <button class="radial__core" id="radialBtn" aria-label="Open menu" aria-expanded="false"><span class="radial__glyph">◈</span><canvas id="gemCanvas" width="144" height="144" aria-hidden="true"></canvas></button>
-  <!-- pages — outer orbit -->
-  <button class="r-item" data-rnav="home"         style="--x:208px;--y:-27px" ><i>01</i><span>Home</span></button>
-  <button class="r-item" data-rnav="about"        style="--x:200px;--y:-64px" ><i>02</i><span>Profile</span></button>
-  <button class="r-item" data-rnav="skills"       style="--x:185px;--y:-99px" ><i>03</i><span>Skills</span></button>
-  <button class="r-item" data-rnav="projects"     style="--x:164px;--y:-131px"><i>04</i><span>Projects</span></button>
-  <button class="r-item" data-rnav="certificates" style="--x:138px;--y:-158px"><i>05</i><span>Certificates</span></button>
-  <button class="r-item" data-rnav="videos"       style="--x:107px;--y:-181px"><i>06</i><span>Videos</span></button>
-  <button class="r-item" data-rnav="resume"       style="--x:73px;--y:-197px" ><i>07</i><span>Résumé</span></button>
-  <button class="r-item" data-rnav="contact"      style="--x:36px;--y:-207px" ><i>08</i><span>Contact</span></button>
-  <!-- signals — inner orbit -->
-  <a class="r-soc" href="https://github.com/illyayuuki-ops" target="_blank" aria-label="GitHub" style="--x:136px;--y:-63px">
+<!-- ============ FACET NAV — diamond shards across the top ============ -->
+<nav class="facetnav" id="facetNav" aria-label="Site navigation">
+  <button class="f-shard f-shard--hq" data-fnav="home"><i>◆</i><span>SPACE</span></button>
+  <button class="f-shard" data-fnav="intro"><i>01</i><span>Intro</span></button>
+  <button class="f-shard" data-fnav="about"><i>02</i><span>Profile</span></button>
+  <button class="f-shard" data-fnav="skills"><i>03</i><span>Skills</span></button>
+  <button class="f-shard" data-fnav="projects"><i>04</i><span>Projects</span></button>
+  <button class="f-shard" data-fnav="certificates"><i>05</i><span>Certificates</span></button>
+  <button class="f-shard" data-fnav="videos"><i>06</i><span>Videos</span></button>
+  <button class="f-shard" data-fnav="resume"><i>07</i><span>Résumé</span></button>
+  <button class="f-shard" data-fnav="contact"><i>08</i><span>Contact</span></button>
+  <span class="f-sep"></span>
+  <a class="f-shard f-shard--soc" href="https://github.com/illyayuuki-ops" target="_blank" aria-label="GitHub">
     <svg viewBox="0 0 24 24"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.38-5.25 5.67.41.35.78 1.05.78 2.12v3.15c0 .31.21.67.8.56A10.52 10.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/></svg>
-    <span class="mono">GITHUB</span></a>
-  <a class="r-soc" href="https://www.linkedin.com/in/john-raphael-gliane-6083ab270" target="_blank" aria-label="LinkedIn" style="--x:106px;--y:-106px">
+    <span>GITHUB</span>
+  </a>
+  <a class="f-shard f-shard--soc" href="https://www.linkedin.com/in/john-raphael-gliane-6083ab270" target="_blank" aria-label="LinkedIn">
     <svg viewBox="0 0 24 24"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.22 8.16h4.56V24H.22V8.16zM8.34 8.16h4.37v2.16h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.47 3.04 5.47 6.99V24h-4.55v-7.98c0-1.9-.04-4.35-2.65-4.35-2.65 0-3.06 2.07-3.06 4.21V24H8.34V8.16z"/></svg>
-    <span class="mono">LINKEDIN</span></a>
-  <a class="r-soc" href="https://ph.jobstreet.com/profiles/johnraphael-pababero-lwmj9bdwfr" target="_blank" aria-label="JobStreet" style="--x:63px;--y:-136px">
+    <span>LINKEDIN</span>
+  </a>
+  <a class="f-shard f-shard--soc" href="https://ph.jobstreet.com/profiles/johnraphael-pababero-lwmj9bdwfr" target="_blank" aria-label="JobStreet">
     <svg viewBox="0 0 24 24"><path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4C8.89 2 8 2.89 8 4v2H4C2.89 6 2 6.89 2 8v11c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2zm-8 4h12v2H6v-2z"/></svg>
-    <span class="mono">JOBSTREET</span></a>
+    <span>JOBSTREET</span>
+  </a>
 </nav>
 
 <!-- mobile header -->
@@ -82,9 +81,35 @@
 <main class="main">
 
   <!-- ============ 01 · HOME (3D crystal) ============ -->
-  <section class="page hero page-active" id="home">
+  <!-- ============ PAGE 00 · SPACE (boot view: crystal only) ============ -->
+  <section class="page hero" id="home">
     <canvas id="crystalCanvas" class="hero__3d"></canvas>
-    <div class="hero__tag mono" id="heroTag">◈ CLICK ME</div>
+    <div class="hero__drag-hint mono" id="dragHint">◈ CLICK TO ENTER</div>
+  </section>
+
+  <!-- ============ 01 · INTRO (first page after the pop) ============ -->
+  <section class="page section" id="intro">
+    <div class="hero__content">
+      <p class="mono dim reveal">JOHN RAPHAEL G. PABABERO — BSIT III — LCC TANAUAN</p>
+      <h1 class="hero__title">
+        <span class="split reveal">WEB</span>
+        <span class="split reveal">DEVELOPER <em class="accent">&amp;</em></span>
+        <span class="split reveal">BUILDER.</span>
+      </h1>
+      <p class="hero__sub reveal">I design and build clean, functional digital systems — from
+        full-stack web applications to networks and games.</p>
+      <div class="hero__role mono reveal"><span>▸</span> <span id="typedRole"></span><span class="caret">_</span></div>
+      <div class="hero__cta reveal">
+        <a href="#projects" class="btn">Projects →</a>
+        <a href="assets/resume/John_Raphael_Pababero_Resume.pdf" class="btn btn--ghost" download>↓ Résumé</a>
+        <a href="#contact" class="btn btn--ghost">Contact</a>
+      </div>
+    </div>
+    <div class="hero__stats mono">
+      <div><b data-count="4">0</b><span>PROJECTS</span></div>
+      <div><b data-count="8">0</b><span>CERTIFICATES</span></div>
+      <div><b data-count="12">0</b><span>TECHNOLOGIES</span></div>
+    </div>
   </section>
 
   <!-- ============ 02 · PROFILE ============ -->

@@ -41,8 +41,8 @@
   }, 1000);
 
   /* ------- page router ------- */
-  const ORDER = ["home","about","skills","projects","certificates","videos","resume","contact"];
-  const links = $$(".r-item");
+  const ORDER = ["home","intro","about","skills","projects","certificates","videos","resume","contact"];
+  const links = $$("[data-fnav]");
   const idxEl = $("#pageIdx");
   let current = null;
 
@@ -68,7 +68,8 @@
     const page = document.getElementById(id);
     page.classList.add("page-active");
     page.scrollTop = 0;
-    links.forEach(l => l.classList.toggle("active", l.dataset.rnav === id));
+    links.forEach(l => l.classList.toggle("act", l.dataset.fnav === id));
+    document.body.classList.toggle("deck", id !== "home");
     if (idxEl) idxEl.textContent = String(ORDER.indexOf(id) + 1).padStart(2, "0") + " / " + String(ORDER.length).padStart(2, "0");
     edgeSync(ORDER.indexOf(id));
     history.replaceState(null, "", "#" + id);
@@ -77,10 +78,14 @@
     window.__fitCrystal && window.__fitCrystal();
     window.__fitCarousel && window.__fitCarousel();
     reveals(id);
-    if (id === "home") startTyped();
+    if (id === "intro") startTyped();
   }
 
-  const step = d => showPage(ORDER[(ORDER.indexOf(current) + d + ORDER.length) % ORDER.length]);
+  const DECK = ORDER.slice(1);                                    // deck pages only (home stays on the crystal)
+  const step = d => {
+    if (current === "home") { if (d > 0) window.__enterDeck(); return; }
+    showPage(DECK[(DECK.indexOf(current) + d + DECK.length) % DECK.length]);
+  };
   const pp = $("#prevPage"), pn = $("#nextPage");
   pp && pp.addEventListener("click", () => step(-1));
   pn && pn.addEventListener("click", () => step(1));
@@ -95,18 +100,18 @@
   });
 
   /* ------- edge facets — candy-wrap rails ------- */
-  const NAV_NAMES = {home:"HOME",about:"PROFILE",skills:"SKILLS",projects:"PROJECTS",certificates:"CERTIFICATES",videos:"VIDEOS",resume:"RÉSUMÉ",contact:"CONTACT"};
+  const NAV_NAMES = {home:"HOME",intro:"INTRO",about:"PROFILE",skills:"SKILLS",projects:"PROJECTS",certificates:"CERTIFICATES",videos:"VIDEOS",resume:"RÉSUMÉ",contact:"CONTACT"};
   const edgePrev = $("#edgePrev"), edgeNext = $("#edgeNext");
   const tagPrev = $("#tagPrev"), tagNext = $("#tagNext");
   edgePrev && edgePrev.addEventListener("click", () => step(-1));
   edgeNext && edgeNext.addEventListener("click", () => step(1));
   function edgeSync(idx) {
     if (!edgePrev || !edgeNext) return;
-    const prevI = (idx - 1 + ORDER.length) % ORDER.length;
-    const nextI = (idx + 1) % ORDER.length;
-    if (tagPrev) tagPrev.textContent = "PREV · " + NAV_NAMES[ORDER[prevI]];
-    if (tagNext) tagNext.textContent = "NEXT · " + NAV_NAMES[ORDER[nextI]];
-    const lit = Math.ceil((idx) / 2);                              // pages fill the rails as you climb
+    if (idx < 1) return;                                            // home: rails stay hidden
+    const deck = ORDER.slice(1), di = deck.indexOf(ORDER[idx]);
+    if (tagPrev) tagPrev.textContent = "PREV · " + NAV_NAMES[deck[(di - 1 + deck.length) % deck.length]];
+    if (tagNext) tagNext.textContent = "NEXT · " + NAV_NAMES[deck[(di + 1) % deck.length]];
+    const lit = Math.min(4, Math.ceil((di + 1) * 4 / deck.length)); // pages fill the rails as you climb
     edgePrev.querySelectorAll(".ef").forEach((f, i) => f.classList.toggle("lit", 3 - i < lit));
     edgeNext.querySelectorAll(".ef").forEach((f, i) => f.classList.toggle("lit", 3 - i < lit));
   }
@@ -118,7 +123,7 @@
     window.__deckEntered = true; setTimeout(() => window.__deckEntered = false, 900);
     blip(880, .09); setTimeout(() => blip(1200, .07), 140);
     window.__shatterCrystal && window.__shatterCrystal();
-    setTimeout(() => showPage("about"), 680);
+    setTimeout(() => showPage("intro"), 680);
   };
   const enterBtn = $("#enterBtn");
   enterBtn && enterBtn.addEventListener("click", window.__enterDeck);
@@ -143,31 +148,8 @@
     })();
   })();
 
-  /* ------- radial orbit menu ------- */
-  const radial = $("#radial"), radialBtn = $("#radialBtn");
-  const radialSet = open => {
-    radial.classList.toggle("open", open);
-    radialBtn.setAttribute("aria-expanded", open ? "true" : "false");
-    blip(open ? 660 : 520, .06);
-    if (open) {                                   // diamond glints, then bursts into shards
-      window.__gemShine && window.__gemShine();
-      radialBtn.classList.remove("shine");
-      void radialBtn.offsetWidth;                  // restart the beam animation
-      radialBtn.classList.add("shine");
-      setTimeout(() => radialBtn.classList.remove("shine"), 750);
-    }
-  };
-  radialBtn.addEventListener("click", () => radialSet(!radial.classList.contains("open")));
-  $(".radial__veil", radial).addEventListener("click", () => radialSet(false));
-  document.addEventListener("pointerdown", e => {
-    if (radial.classList.contains("open") && !radial.contains(e.target)) radialSet(false);
-  });
-  links.forEach(l => l.addEventListener("click", () => { radialSet(false); showPage(l.dataset.rnav); }));
-  addEventListener("keydown", e => {
-    if (/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
-    if (e.key === "Escape") radialSet(false);
-    if (e.key === "m" || e.key === "M") radialSet(!radial.classList.contains("open"));
-  });
+  /* ------- facet shards nav ------- */
+  $$("[data-fnav]").forEach(l => l.addEventListener("click", () => { blip(700, .05); showPage(l.dataset.fnav); }));
 
   /* ------- loader ------- */
   const pre = $("#preloader"), preCount = $("#preCount"), preBar = $("#preBar");
@@ -182,8 +164,8 @@
       booted = true;
       setTimeout(() => {
         pre.classList.add("done");
-        const h = location.hash.slice(1);
-        showPage(ORDER.includes(h) ? h : "home", true);
+        showPage("home", true);   // always boot in space at the crystal — page 01
+        history.replaceState(null, "", location.pathname);
         setTimeout(() => pre.remove(), 800);
       }, 350);
     }

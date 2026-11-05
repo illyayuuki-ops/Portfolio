@@ -123,9 +123,9 @@
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       const wide = w > 900;
-      group.position.x = 0;                  // crystal owns the center of the universe
-      group.position.y = wide ? 0 : 0.15;
-      group.scale.setScalar(wide ? 1.06 : 0.78);
+      group.position.x = 0;                      // the crystal IS the space backdrop — dead center
+      group.position.y = 0;
+      group.scale.setScalar(wide ? 1.18 : 0.84);
     };
     fit();
     addEventListener("resize", fit);
