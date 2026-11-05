@@ -63,6 +63,7 @@
   }
   function showPage(id, silent = false) {
     if (!ORDER.includes(id) || id === current) return;
+    if (current === "videos") $$("#videos video").forEach(v => v.pause());   // stop playback when leaving
     if (current) { scanSweep(); document.getElementById(current).classList.remove("page-active"); }
     current = id;
     const page = document.getElementById(id);
@@ -239,8 +240,20 @@
   lb.addEventListener("click", e => { if (e.target === lb) shut(); });
   addEventListener("keydown", e => { if (e.key === "Escape") shut(); });
 
-  /* ------- video fallback ------- */
-  $$("video").forEach(v => {
+  /* ------- videos: diamond play, one-at-a-time, fallback ------- */
+  const vids = $$("#videos video");
+  vids.forEach(v => {
+    const card = v.closest(".vid"), btn = card && card.querySelector(".vid__play");
+    v.controls = false;                                         // clean thumbnail until first play (HTML keeps controls for no-JS)
+    const start = () => { v.controls = true; v.play().catch(() => {}); };
+    btn && btn.addEventListener("click", start);
+    v.addEventListener("click", () => { if (!card.classList.contains("is-started")) start(); });
+    v.addEventListener("play", () => {
+      vids.forEach(o => { if (o !== v) o.pause(); });          // only one plays at a time
+      v.controls = true;
+      card && card.classList.add("is-started", "is-playing");
+    });
+    v.addEventListener("pause", () => card && card.classList.remove("is-playing"));
     v.addEventListener("error", () => missing(v), true);
     const s = v.querySelector("source");
     if (s) s.addEventListener("error", () => missing(v));
@@ -248,9 +261,10 @@
   function missing(v) {
     if (v.closest(".missing-host")) return;
     const host = v.parentElement, src = v.querySelector("source");
+    const path = (src ? src.getAttribute("src") : v.getAttribute("src") || "assets/videos/demo.mp4").split("#")[0];
     host.classList.add("missing-host");
     host.innerHTML = `<div class="video-missing"><div class="pm">▶</div>
-      <b>MEDIA SLOT READY</b><code>${src ? src.getAttribute("src") : "assets/videos/demo.mp4"}</code></div>`;
+      <b>MEDIA SLOT READY</b><code>${path}</code></div>`;
   }
 
   /* ------- magnetic UI ------- */
