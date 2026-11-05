@@ -268,6 +268,8 @@ h2{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin-bottom:38px}
 .vid.is-started .vid__play{opacity:0;pointer-events:none;transform:scale(.6)}
 .vid__dur{position:absolute;right:8px;top:8px;z-index:2;font-size:.66rem;letter-spacing:.08em;padding:3px 7px;border-radius:6px;background:rgba(2,10,22,.7);border:1px solid var(--line);color:var(--ink);transition:opacity .3s}
 .vid.is-started .vid__dur{opacity:0}
+.vid__dur em{font-style:normal;color:var(--sky);letter-spacing:.12em}
+@media(max-width:380px){.vid__dur em{display:none}}
 .vid__meta{display:flex;align-items:center;gap:8px;margin:12px 4px 0;font-size:.64rem;letter-spacing:.14em}
 .vid__meta span{color:var(--sky)}
 .vid__meta b{font-weight:500;color:var(--muted);padding:2px 7px;border:1px solid var(--line);border-radius:999px}
