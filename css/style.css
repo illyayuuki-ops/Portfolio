@@ -451,6 +451,7 @@ button.btn{font-family:inherit}
 .vplayer__meta span{color:var(--sky)}
 .vplayer__meta b{font-weight:500;color:var(--muted);padding:2px 8px;border:1px solid var(--line);border-radius:999px}
 .vplayer__meta .vid__wip{margin-left:0}
+.vid__meta .vid__wip,.vplayer__meta .vid__wip{color:#ffd27a}
 .vplayer__row{display:flex;gap:20px;align-items:flex-end;justify-content:space-between;padding:0 6px}
 .vplayer__row .modal__title{margin-bottom:4px;padding-right:0}
 .vplayer__row p{color:var(--muted);font-size:.9rem;line-height:1.6}

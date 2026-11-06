@@ -300,7 +300,7 @@
         <video controls playsinline autoplay preload="auto" controlslist="nofullscreen nodownload" disablepictureinpicture src="${esc(d.video)}"></video>
         <button class="vplayer__exit mono" type="button" aria-label="Exit fullscreen">✕ EXIT FULLSCREEN</button>
       </div>
-      <div class="vplayer__meta mono"><span>V·${esc(d.n)}</span><b>${esc(d.tag)}</b><b>${esc(d.dur)} · FULL WALKTHROUGH</b>${d.wip ? '<span class="vid__wip">UNFINISHED</span>' : ""}</div>
+      <div class="vplayer__meta mono"><span>V·${esc(d.n)}</span><b>${esc(d.tag)}</b><b>${esc(d.dur)} · FULL WALKTHROUGH</b>${d.wip ? '<span class="vid__wip">IN DEVELOPMENT</span>' : ""}</div>
       <div class="vplayer__row">
         <div><h3 class="modal__title">${title}</h3><p>${esc(d.cap)}</p></div>
         <div class="vplayer__nav mono">
@@ -363,7 +363,7 @@
     w.innerHTML = `
       <p class="modal__kicker mono"><span>${pad2(cI + 1)} / ${pad2(PR.length)}</span>CASE STUDY · ${esc(p.role)}</p>
       <h3 class="modal__title">${esc(p.t)}</h3>
-      <div class="tags mono case__tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join("")}${p.wip ? '<span class="vid__wip">UNFINISHED</span>' : ""}</div>
+      <div class="tags mono case__tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join("")}${p.wip ? '<span class="vid__wip">IN DEVELOPMENT</span>' : ""}</div>
       <div class="case__grid">
         <section class="case__block"><h4 class="mono"><i>01</i>${p.kind === "game" ? "THE IDEA" : "THE PROBLEM"}</h4><p>${esc(p.problem)}</p></section>
         <section class="case__block"><h4 class="mono"><i>02</i>MY ROLE</h4><p>${esc(p.myrole)}</p></section>

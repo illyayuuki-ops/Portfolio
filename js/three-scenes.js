@@ -242,9 +242,11 @@
       wrapText(x, p.d, 56, tEnd + 92, 912, 50);
       // role tag
       x.font = "400 30px 'IBM Plex Mono', monospace"; x.fillStyle = "#5ee3ff";
-      x.fillText("▸ " + p.role, 56, 565);
+      const roleTxt = "▸ " + p.role, tagTxt = p.tags.join(" · ");
+      x.fillText(roleTxt, 56, 565);
+      const crowded = x.measureText(roleTxt).width + x.measureText(tagTxt).width + 48 > 912;
       x.textAlign = "right"; x.fillStyle = "rgba(127,147,177,1)";
-      x.fillText(p.tags.join(" · "), 968, 565); x.textAlign = "left";
+      x.fillText(tagTxt, 968, crowded ? 515 : 565); x.textAlign = "left";   // long stacks move up a line
       const tex = new THREE.CanvasTexture(c);
       tex.anisotropy = 8;
       return tex;
