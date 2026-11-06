@@ -63,7 +63,7 @@
   }
   function showPage(id, silent = false) {
     if (!ORDER.includes(id) || id === current) return;
-    if (current === "videos") $$("#videos video").forEach(v => v.pause());   // stop playback when leaving
+    window.__closePopups && window.__closePopups();                     // never carry a pop-up across pages
     if (current) { scanSweep(); document.getElementById(current).classList.remove("page-active"); }
     current = id;
     const page = document.getElementById(id);
@@ -96,6 +96,7 @@
   }));
   addEventListener("keydown", e => {
     if (/INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if (document.body.classList.contains("popup-open")) return;   // modal / lightbox handle their own keys
     if (e.key === "ArrowRight") step(1);
     if (e.key === "ArrowLeft") step(-1);
   });
@@ -203,10 +204,8 @@
       ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
       requestAnimationFrame(loop);
     })();
-    $$("a,button,.cert,input,textarea,.skillrow,canvas").forEach(el => {
-      el.addEventListener("mouseenter", () => ring.classList.add("hovering"));
-      el.addEventListener("mouseleave", () => ring.classList.remove("hovering"));
-    });
+    const HOV = "a,button,.cert,.vid,.cap-tile,input,textarea,.skillrow,canvas,video,.resume__doc";
+    addEventListener("mouseover", e => ring.classList.toggle("hovering", !!e.target.closest(HOV)));
   } else document.body.classList.add("no-cursorfx");
 
   /* ------- skill bars + counters (on visibility) ------- */
@@ -230,42 +229,104 @@
   }), { threshold: .6 });
   $$("[data-count]").forEach(el => numIO.observe(el));
 
-  /* ------- lightbox ------- */
-  const lb = $("#lightbox"), lbImg = $("#lbImg");
+  /* ------- lightbox (gallery: certificates / résumé) ------- */
+  const lb = $("#lightbox"), lbImg = $("#lbImg"), lbCap = $("#lbCap"), lbPrev = $("#lbPrev"), lbNext = $("#lbNext");
+  let lbSet = [], lbI = 0;
+  const lbShow = i => {
+    lbI = (i + lbSet.length) % lbSet.length;
+    const f = lbSet[lbI], b = f.querySelector("figcaption b"), sp = f.querySelector("figcaption span");
+    lbImg.src = f.dataset.lightbox;
+    lbCap.innerHTML = b ? `<b>${b.textContent}</b>${sp ? `<span>${sp.textContent}</span>` : ""}<em>${String(lbI + 1).padStart(2, "0")} / ${String(lbSet.length).padStart(2, "0")}</em>` : "";
+    lbCap.style.display = b ? "" : "none";
+  };
   $$("[data-lightbox]").forEach(f => f.addEventListener("click", () => {
-    lbImg.src = f.dataset.lightbox; lb.classList.add("open"); blip(900, .08);
+    lbSet = $$("[data-lightbox]", f.parentElement);                // gallery = siblings (8 certs) or just itself
+    lb.classList.toggle("lb--single", lbSet.length < 2);
+    lbShow(lbSet.indexOf(f));
+    lb.classList.add("open"); document.body.classList.add("popup-open"); blip(900, .08);
   }));
-  const shut = () => lb.classList.remove("open");
+  const shut = () => { lb.classList.remove("open"); syncPopup(); };
+  lbPrev.addEventListener("click", e => { e.stopPropagation(); lbShow(lbI - 1); blip(760, .05); });
+  lbNext.addEventListener("click", e => { e.stopPropagation(); lbShow(lbI + 1); blip(820, .05); });
   $("#lbClose").addEventListener("click", shut);
-  lb.addEventListener("click", e => { if (e.target === lb) shut(); });
-  addEventListener("keydown", e => { if (e.key === "Escape") shut(); });
+  lb.addEventListener("click", e => { if (e.target === lb || e.target.classList.contains("lb__fig")) shut(); });
 
-  /* ------- videos: diamond play, one-at-a-time, fallback ------- */
-  const vids = $$("#videos video");
-  vids.forEach(v => {
-    const card = v.closest(".vid"), btn = card && card.querySelector(".vid__play");
-    v.controls = false;                                         // clean thumbnail until first play (HTML keeps controls for no-JS)
-    const start = () => { v.controls = true; v.play().catch(() => {}); };
-    btn && btn.addEventListener("click", start);
-    v.addEventListener("click", () => { if (!card.classList.contains("is-started")) start(); });
-    v.addEventListener("play", () => {
-      vids.forEach(o => { if (o !== v) o.pause(); });          // only one plays at a time
-      v.controls = true;
-      card && card.classList.add("is-started", "is-playing");
-    });
-    v.addEventListener("pause", () => card && card.classList.remove("is-playing"));
-    v.addEventListener("error", () => missing(v), true);
-    const s = v.querySelector("source");
-    if (s) s.addEventListener("error", () => missing(v));
-  });
-  function missing(v) {
-    if (v.closest(".missing-host")) return;
-    const host = v.parentElement, src = v.querySelector("source");
-    const path = (src ? src.getAttribute("src") : v.getAttribute("src") || "assets/videos/demo.mp4").split("#")[0];
-    host.classList.add("missing-host");
-    host.innerHTML = `<div class="video-missing"><div class="pm">▶</div>
-      <b>MEDIA SLOT READY</b><code>${path}</code></div>`;
+  /* ------- modal (glass pop-up: page details + video player) ------- */
+  const modal = $("#modal"), mBox = $("#modalBox"), mBody = $("#modalBody");
+  function syncPopup() {
+    document.body.classList.toggle("popup-open", lb.classList.contains("open") || modal.classList.contains("open"));
   }
+  function openModal(content, kind = "") {
+    mBody.querySelectorAll("video").forEach(v => v.pause());
+    mBody.innerHTML = ""; mBody.append(content); mBody.scrollTop = 0;
+    mBox.className = "modal__box glass" + (kind ? " modal__box--" + kind : "");
+    modal.classList.add("open"); modal.setAttribute("aria-hidden", "false");
+    syncPopup(); blip(980, .07);
+    $("#modalClose").focus({ preventScroll: true });
+  }
+  function closeModal() {
+    if (!modal.classList.contains("open")) return;
+    mBody.querySelectorAll("video").forEach(v => v.pause());
+    modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true");
+    syncPopup();
+    setTimeout(() => { if (!modal.classList.contains("open")) mBody.innerHTML = ""; }, 400);
+  }
+  window.__closePopups = () => { closeModal(); shut(); };
+  $("#modalClose").addEventListener("click", closeModal);
+  modal.addEventListener("click", e => { if (e.target === modal) closeModal(); });
+  $$("[data-modal]").forEach(t => t.addEventListener("click", () => {
+    const tpl = document.getElementById(t.dataset.modal); if (!tpl) return;
+    openModal(tpl.content.cloneNode(true));
+    if (t.dataset.focus != null) {                                  // capability tiles: spotlight the one clicked
+      const c = mBody.querySelectorAll(".cap")[+t.dataset.focus];
+      if (c) { c.classList.add("focus"); setTimeout(() => c.scrollIntoView({ block: "nearest", behavior: "smooth" }), 60); }
+    }
+  }));
+
+  /* ------- videos: compact cards → modal player ------- */
+  const vcards = $$("#videos .vid");
+  let vI = 0;
+  function playVideo(i) {
+    vI = (i + vcards.length) % vcards.length;
+    const c = vcards[vI], d = c.dataset, title = c.querySelector("h3").textContent;
+    const w = document.createElement("div"); w.className = "vplayer";
+    w.innerHTML = `
+      <div class="vplayer__frame"><video controls playsinline autoplay preload="auto" src="${d.video}"></video></div>
+      <div class="vplayer__meta mono"><span>V·${d.n}</span><b>${d.tag}</b><b>${d.dur} · FULL WALKTHROUGH</b>${d.wip ? '<span class="vid__wip">UNFINISHED</span>' : ""}</div>
+      <div class="vplayer__row">
+        <div><h3 class="modal__title">${title}</h3><p>${d.cap}</p></div>
+        <div class="vplayer__nav mono">
+          <button type="button" data-step="-1" aria-label="Previous video">‹ PREV</button>
+          <em>${String(vI + 1).padStart(2, "0")} / ${String(vcards.length).padStart(2, "0")}</em>
+          <button type="button" data-step="1" aria-label="Next video">NEXT ›</button>
+        </div>
+      </div>`;
+    w.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => playVideo(vI + +b.dataset.step)));
+    const v = w.querySelector("video");
+    v.addEventListener("error", () => {
+      v.parentElement.innerHTML = `<div class="video-missing"><div class="pm">▶</div><b>VIDEO UNAVAILABLE</b><code>${d.video}</code></div>`;
+    });
+    openModal(w, "video");
+    v.play().catch(() => {});
+  }
+  vcards.forEach((c, i) => {
+    c.addEventListener("click", () => playVideo(i));
+    c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); playVideo(i); } });
+    const tv = c.querySelector("video");
+    tv && tv.addEventListener("error", () => c.classList.add("vid--nothumb"));
+  });
+
+  addEventListener("keydown", e => {
+    if (e.key === "Escape") { closeModal(); shut(); return; }
+    if (lb.classList.contains("open") && lbSet.length > 1) {
+      if (e.key === "ArrowRight") lbShow(lbI + 1);
+      if (e.key === "ArrowLeft") lbShow(lbI - 1);
+    } else if (modal.classList.contains("open") && mBox.classList.contains("modal__box--video")
+               && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
+      if (e.key === "ArrowRight" && e.shiftKey) playVideo(vI + 1);   // plain arrows stay with the player (seek)
+      if (e.key === "ArrowLeft" && e.shiftKey) playVideo(vI - 1);
+    }
+  });
 
   /* ------- magnetic UI ------- */
   if (fine) {
