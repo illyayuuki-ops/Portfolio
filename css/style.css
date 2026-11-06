@@ -1,5 +1,5 @@
 /* ============================================================
-   ✦ MINIMAL · GLASS · TECH — JRP Portfolio
+   ✦ MINIMAL · GLASS · TECH - JRP Portfolio
 ============================================================ */
 :root{
   --bg:#05080f;
@@ -372,7 +372,7 @@ h2{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin-bottom:38px}
 .gchip:hover{color:var(--sky);border-color:var(--sky-dim)}
 .gchip__dot{width:6px;height:6px;border-radius:50%;background:var(--sky);box-shadow:0 0 8px var(--sky);animation:blink 1.6s steps(1) infinite}
 
-/* shards override — keep facet transparent so the diamond shape shows */
+/* shards override - keep facet transparent so the diamond shape shows */
 .r-item{background:transparent !important;border:none !important}
 
 
@@ -388,7 +388,7 @@ h2{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin-bottom:38px}
 @keyframes enterPulse{0%{transform:scale(.92);opacity:.8}100%{transform:scale(1.5);opacity:0}}
 .enter-hint{color:var(--muted);font-size:.58rem;letter-spacing:.32em;margin-top:18px;animation:blink 2.8s steps(1) infinite}
 
-/* ---------- edge facets — candy-wrap page rails ---------- */
+/* ---------- edge facets - candy-wrap page rails ---------- */
 .edge-facets{position:fixed;top:50%;left:calc(50% - min(580px,46vw) - 76px);transform:translateY(-50%);z-index:640;
   display:flex;flex-direction:column;gap:16px;align-items:center;pointer-events:none;
   opacity:0;visibility:hidden;transition:opacity .5s var(--ease)}
@@ -472,9 +472,9 @@ h2{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin-bottom:38px}
 .radial .radial__veil,.radial .radial__ring{transition-delay:.05s}
 .r-item--hq i{color:var(--sky);font-size:.78rem}
 .r-item--hq::before{box-shadow:inset 0 0 0 1.4px rgba(94,227,255,.55)}
-/* topnav retired — harmless if still present */
+/* topnav retired - harmless if still present */
 
-/* ---------- facet nav — shard strip across the top ---------- */
+/* ---------- facet nav - shard strip across the top ---------- */
 .facetnav{position:fixed;top:22px;left:50%;z-index:660;display:flex;gap:14px;align-items:center;padding:4px 0;
   transform:translateX(-50%) translateY(-26px);max-width:96vw;overflow-x:auto;scrollbar-width:none;
   background:transparent;border:none;
@@ -511,7 +511,7 @@ h2{font-size:clamp(2rem,5vw,3.4rem);line-height:1.05;margin-bottom:38px}
 @media(max-width:900px){.facetnav{top:10px;gap:9px;padding:10px 12px}.f-shard{width:40px;height:40px}}
 
 /* ============================================================
-   COMPACT DECK + GLASS MODALS — every page fits one screen (desktop)
+   COMPACT DECK + GLASS MODALS - every page fits one screen (desktop)
 ============================================================ */
 .cursor-dot,.cursor-ring{z-index:2000}                       /* stay visible above pop-ups */
 .btn{cursor:none}
@@ -634,7 +634,7 @@ button.btn{font-family:inherit}
   .carousel__info{margin-top:clamp(8px,1.6vh,16px);padding:clamp(10px,1.8vh,18px) 22px}
   .carousel__info p{font-size:.86rem;line-height:1.55}
 
-  /* 05 certificates — 4×2 thumbnails sized to the screen height, click → gallery */
+  /* 05 certificates - 4×2 thumbnails sized to the screen height, click → gallery */
   .certs{flex:1;min-height:0;container-type:size;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));
     gap:14px;align-items:center;justify-items:center}
   .cert{--ih:calc((100cqh - 14px) / 2 - 54px);width:min(100%,calc(var(--ih) * 4 / 3))}
@@ -642,7 +642,7 @@ button.btn{font-family:inherit}
   .cert figcaption b{font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .cert figcaption span{display:block;font-size:.54rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  /* 06 videos — 3×2 thumbnails, click → modal player */
+  /* 06 videos - 3×2 thumbnails, click → modal player */
   .vids__sub{margin:-4px 0 clamp(10px,1.8vh,18px)}
   .videos{flex:1;min-height:0;container-type:size;max-width:none;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));
     gap:14px;align-items:center;justify-items:center}
@@ -688,3 +688,28 @@ button.btn{font-family:inherit}
 }
 .lb__cap b{text-transform:none}
 @media(max-width:900px){.skillrow{gap:12px;padding:12px 16px}.skillrow span{min-width:0;flex:0 0 50%;font-size:.64rem}.skillrow .track{min-width:40px}}
+
+/* ============================================================
+   PERFORMANCE + FULLSCREEN (smooth cursor, no stacked blur)
+============================================================ */
+/* the stage panel already blurs the space behind it; cards inside don't need a second live blur */
+.page .glass,.vid__play i,.modal__box{backdrop-filter:none;-webkit-backdrop-filter:none}
+.page .glass{background:rgba(255,255,255,.04)}
+.vid__play i{background:linear-gradient(135deg,rgba(94,227,255,.34),rgba(8,18,34,.6))}
+.modal__box{background:rgba(10,18,33,.94)}
+.cursor-dot,.cursor-ring{will-change:transform}
+
+/* fullscreen player: real mouse pointer + always-reachable exit */
+:fullscreen,:fullscreen *{cursor:auto !important}
+:-webkit-full-screen,:-webkit-full-screen *{cursor:auto !important}
+.vplayer__exit{display:none}
+.vplayer__frame:fullscreen{width:100vw;height:100vh;max-height:none;aspect-ratio:auto;border:0;border-radius:0;background:#000}
+.vplayer__frame:-webkit-full-screen{width:100vw;height:100vh;max-height:none;border:0;border-radius:0;background:#000}
+.vplayer__frame:fullscreen .vplayer__exit,.vplayer__frame:-webkit-full-screen .vplayer__exit{display:flex}
+.vplayer__exit{position:absolute;top:22px;right:22px;z-index:5;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;
+  font-size:.7rem;letter-spacing:.18em;color:#eaf8ff;background:rgba(6,12,24,.78);border:1px solid rgba(94,227,255,.55);
+  box-shadow:0 0 24px -6px rgba(94,227,255,.6);transition:opacity .35s,border-color .3s}
+.vplayer__exit:hover{border-color:var(--sky);color:var(--sky)}
+.vplayer__frame.fs-idle .vplayer__exit{opacity:0}
+.vplayer__frame.fs-idle:hover .vplayer__exit:hover{opacity:1}
+.vplayer__fs{color:var(--sky) !important;border-color:rgba(94,227,255,.4) !important}

@@ -1,5 +1,5 @@
 /* ============================================================
-   ✦ three-scenes.js — REAL interactive 3D (Three.js, vendored)
+   ✦ three-scenes.js - REAL interactive 3D (Three.js, vendored)
    Scene A: draggable glass CRYSTAL with inertia (home page)
    Scene B: draggable 3D PROJECT CAROUSEL (projects page)
    Both run only while their page is active.
@@ -15,7 +15,7 @@
   const isCoarse = matchMedia("(pointer:coarse)").matches;
 
   /* ============================================================
-     SCENE A — HERO CRYSTAL (drag = rotate, inertia spin)
+     SCENE A - HERO CRYSTAL (drag = rotate, inertia spin)
   ============================================================ */
   (() => {
     const canvas = document.getElementById("crystalCanvas");
@@ -123,7 +123,7 @@
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       const wide = w > 900;
-      group.position.x = 0;                      // the crystal IS the space backdrop — dead center
+      group.position.x = 0;                      // the crystal IS the space backdrop - dead center
       group.position.y = 0;
       group.scale.setScalar(wide ? 1.18 : 0.84);
     };
@@ -205,7 +205,7 @@
   })();
 
   /* ============================================================
-     SCENE C — NAV GEM — a tiny live 3D diamond as the menu core
+     SCENE C - NAV GEM - a tiny live 3D diamond as the menu core
      Spins idle, flashes + bursts of spin when the menu opens.
      Falls back to the ◈ glyph if WebGL is unavailable.
   ============================================================ */
@@ -251,11 +251,11 @@
         requestAnimationFrame(frame);
       }
       requestAnimationFrame(f => { t0 = f; frame(f); });
-    } catch (e) { /* WebGL missing — the ◈ glyph remains */ }
+    } catch (e) { /* WebGL missing - the ◈ glyph remains */ }
   })();
 
 /* ============================================================
-     SCENE B — PROJECT CAROUSEL (drag the ring, snap to card)
+     SCENE B - PROJECT CAROUSEL (drag the ring, snap to card)
   ============================================================ */
   (() => {
     const canvas = document.getElementById("carouselCanvas");
@@ -263,8 +263,8 @@
 
     const PROJECTS = [
       { t: "Ingredient Tracking System", d: "Built end-to-end: PHP backend, PostgreSQL/MySQL schemas, secure auth, real-time stock tracking & smart dish recommendations.", tags: ["PHP", "MySQL", "PostgreSQL"], role: "FULL-STACK" },
-      { t: "Aether LMS — LCCTlibTrack", d: "Deployed at LCC Tanauan: client-server workstation monitoring with session logging & institutional usage reporting.", tags: ["Networking", "SysAdmin", "Desktop"], role: "DEVELOPER" },
-      { t: "2.5D Tactical Strategy Game", d: "Turn-based auto-battler — Flutter/Dart + JS mechanics, Blender-modeled 3D assets, custom pixel-art sprites & physics.", tags: ["Flutter", "Dart", "JS", "Blender"], role: "GAME DEV" },
+      { t: "Aether LMS · LCCTlibTrack", d: "Deployed at LCC Tanauan: client-server workstation monitoring with session logging & institutional usage reporting.", tags: ["Networking", "SysAdmin", "Desktop"], role: "DEVELOPER" },
+      { t: "2.5D Tactical Strategy Game", d: "Turn-based auto-battler built with Flutter/Dart and JS, with Blender-modeled 3D assets, custom pixel-art sprites, and physics.", tags: ["Flutter", "Dart", "JS", "Blender"], role: "GAME DEV" },
     ];
 
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });

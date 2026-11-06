@@ -1,10 +1,11 @@
 /* ============================================================
-   ✦ main.js — page router, HUD, sounds & micro-interactions
+   ✦ main.js - page router, HUD, sounds & micro-interactions
 ============================================================ */
 (() => {
   "use strict";
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
+  const esc = v => String(v).replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
   const fine = matchMedia("(hover:hover) and (pointer:fine)").matches;
 
   /* ------- sound ------- */
@@ -101,7 +102,7 @@
     if (e.key === "ArrowLeft") step(-1);
   });
 
-  /* ------- edge facets — candy-wrap rails ------- */
+  /* ------- edge facets - candy-wrap rails ------- */
   const NAV_NAMES = {home:"HOME",intro:"INTRO",about:"PROFILE",skills:"SKILLS",projects:"PROJECTS",certificates:"CERTIFICATES",videos:"VIDEOS",resume:"RÉSUMÉ",contact:"CONTACT"};
   const edgePrev = $("#edgePrev"), edgeNext = $("#edgeNext");
   const tagPrev = $("#tagPrev"), tagNext = $("#tagNext");
@@ -141,13 +142,17 @@
     for (let i = 0; i < 15; i++) hexes.push({x:Math.random(),y:Math.random(),s:Math.random()*15+8,rot:Math.random()*6.28,vr:(Math.random()-.5)*0.0024,vx:(Math.random()-.5)*0.00009,vy:(Math.random()-.5)*0.00009,col:Math.random()<.6?"94,227,255":"170,220,255"});
     let t = 0;
     const hex = s => { ctx.beginPath(); for(let k=0;k<6;k++){const a=s.rot+k*1.047;ctx[k?"lineTo":"moveTo"](Math.cos(a)*s.s,Math.sin(a)*s.s);} ctx.closePath(); ctx.stroke(); };
-    (function loop(){ t++;
-      ctx.clearRect(0,0,W,H);
-      for (const s of hexes){ s.x=(s.x+1+s.vx)%1; s.y=(s.y+1+s.vy)%1; s.rot+=s.vr;
-        ctx.save(); ctx.translate(s.x*W,s.y*H); ctx.strokeStyle=`rgba(${s.col},.13)`; ctx.lineWidth=1; hex(s); ctx.restore(); }
-      for (const s of stars){ const a=.22+.6*Math.abs(Math.sin(t/58*s.sp+s.tw)); ctx.fillStyle=`rgba(214,240,255,${a.toFixed(3)})`; ctx.fillRect(s.x*W,s.y*H,s.r,s.r); }
+    let prev = 0;
+    (function loop(now){
       requestAnimationFrame(loop);
-    })();
+      if (document.hidden || document.body.classList.contains("popup-open")) return;
+      if (now - prev < 33) return;                                   // ~30 fps is plenty for drifting stars
+      prev = now; t++;
+      ctx.clearRect(0,0,W,H);
+      for (const s of hexes){ s.x=(s.x+1+s.vx*2)%1; s.y=(s.y+1+s.vy*2)%1; s.rot+=s.vr*2;
+        ctx.save(); ctx.translate(s.x*W,s.y*H); ctx.strokeStyle=`rgba(${s.col},.13)`; ctx.lineWidth=1; hex(s); ctx.restore(); }
+      for (const s of stars){ const a=.22+.6*Math.abs(Math.sin(t/29*s.sp+s.tw)); ctx.fillStyle=`rgba(214,240,255,${a.toFixed(3)})`; ctx.fillRect(s.x*W,s.y*H,s.r,s.r); }
+    })(0);
   })();
 
   /* ------- facet shards nav ------- */
@@ -166,7 +171,7 @@
       booted = true;
       setTimeout(() => {
         pre.classList.add("done");
-        showPage("home", true);   // always boot in space at the crystal — page 01
+        showPage("home", true);   // always boot in space at the crystal - page 01
         history.replaceState(null, "", location.pathname);
         setTimeout(() => pre.remove(), 800);
       }, 350);
@@ -196,14 +201,20 @@
   /* ------- cursor ------- */
   if (fine) {
     const dot = $("#cursorDot"), ring = $("#cursorRing");
-    let mx = -100, my = -100, rx = -100, ry = -100;
-    addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; });
-    (function loop() {
-      rx += (mx - rx) * .18; ry += (my - ry) * .18;
-      dot.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
-      ring.style.transform = `translate(${rx}px,${ry}px) translate(-50%,-50%)`;
-      requestAnimationFrame(loop);
-    })();
+    let mx = -100, my = -100, rx = -100, ry = -100, running = false, last = 0;
+    const ringLoop = t => {
+      const dt = Math.min(64, t - last); last = t;
+      const k = 1 - Math.pow(1 - .42, dt / 16.7);                // same feel at 60/120/144 Hz
+      rx += (mx - rx) * k; ry += (my - ry) * k;
+      ring.style.transform = `translate3d(${rx}px,${ry}px,0) translate(-50%,-50%)`;
+      if (Math.abs(mx - rx) + Math.abs(my - ry) > .3) requestAnimationFrame(ringLoop);
+      else running = false;                                         // idle: no work while the mouse rests
+    };
+    addEventListener("mousemove", e => {
+      mx = e.clientX; my = e.clientY;
+      dot.style.transform = `translate3d(${mx}px,${my}px,0) translate(-50%,-50%)`;   // zero-lag dot
+      if (!running) { running = true; last = performance.now(); requestAnimationFrame(ringLoop); }
+    }, { passive: true });
     const HOV = "a,button,.cert,.vid,.cap-tile,input,textarea,.skillrow,canvas,video,.resume__doc";
     addEventListener("mouseover", e => ring.classList.toggle("hovering", !!e.target.closest(HOV)));
   } else document.body.classList.add("no-cursorfx");
@@ -236,7 +247,7 @@
     lbI = (i + lbSet.length) % lbSet.length;
     const f = lbSet[lbI], b = f.querySelector("figcaption b"), sp = f.querySelector("figcaption span");
     lbImg.src = f.dataset.lightbox;
-    lbCap.innerHTML = b ? `<b>${b.textContent}</b>${sp ? `<span>${sp.textContent}</span>` : ""}<em>${String(lbI + 1).padStart(2, "0")} / ${String(lbSet.length).padStart(2, "0")}</em>` : "";
+    lbCap.innerHTML = b ? `<b>${esc(b.textContent)}</b>${sp ? `<span>${esc(sp.textContent)}</span>` : ""}<em>${String(lbI + 1).padStart(2, "0")} / ${String(lbSet.length).padStart(2, "0")}</em>` : "";
     lbCap.style.display = b ? "" : "none";
   };
   $$("[data-lightbox]").forEach(f => f.addEventListener("click", () => {
@@ -266,6 +277,7 @@
   }
   function closeModal() {
     if (!modal.classList.contains("open")) return;
+    if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
     mBody.querySelectorAll("video").forEach(v => v.pause());
     modal.classList.remove("open"); modal.setAttribute("aria-hidden", "true");
     syncPopup();
@@ -288,14 +300,18 @@
   let vI = 0;
   function playVideo(i) {
     vI = (i + vcards.length) % vcards.length;
-    const c = vcards[vI], d = c.dataset, title = c.querySelector("h3").textContent;
+    const c = vcards[vI], d = c.dataset, title = esc(c.querySelector("h3").textContent);
     const w = document.createElement("div"); w.className = "vplayer";
     w.innerHTML = `
-      <div class="vplayer__frame"><video controls playsinline autoplay preload="auto" src="${d.video}"></video></div>
-      <div class="vplayer__meta mono"><span>V·${d.n}</span><b>${d.tag}</b><b>${d.dur} · FULL WALKTHROUGH</b>${d.wip ? '<span class="vid__wip">UNFINISHED</span>' : ""}</div>
+      <div class="vplayer__frame">
+        <video controls playsinline autoplay preload="auto" controlslist="nofullscreen nodownload" disablepictureinpicture src="${esc(d.video)}"></video>
+        <button class="vplayer__exit mono" type="button" aria-label="Exit fullscreen">✕ EXIT FULLSCREEN</button>
+      </div>
+      <div class="vplayer__meta mono"><span>V·${esc(d.n)}</span><b>${esc(d.tag)}</b><b>${esc(d.dur)} · FULL WALKTHROUGH</b>${d.wip ? '<span class="vid__wip">UNFINISHED</span>' : ""}</div>
       <div class="vplayer__row">
-        <div><h3 class="modal__title">${title}</h3><p>${d.cap}</p></div>
+        <div><h3 class="modal__title">${title}</h3><p>${esc(d.cap)}</p></div>
         <div class="vplayer__nav mono">
+          <button type="button" class="vplayer__fs" aria-label="Fullscreen">⛶ FULLSCREEN</button>
           <button type="button" data-step="-1" aria-label="Previous video">‹ PREV</button>
           <em>${String(vI + 1).padStart(2, "0")} / ${String(vcards.length).padStart(2, "0")}</em>
           <button type="button" data-step="1" aria-label="Next video">NEXT ›</button>
@@ -304,10 +320,30 @@
     w.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => playVideo(vI + +b.dataset.step)));
     const v = w.querySelector("video");
     v.addEventListener("error", () => {
-      v.parentElement.innerHTML = `<div class="video-missing"><div class="pm">▶</div><b>VIDEO UNAVAILABLE</b><code>${d.video}</code></div>`;
+      v.parentElement.innerHTML = `<div class="video-missing"><div class="pm">▶</div><b>VIDEO UNAVAILABLE</b><code>${esc(d.video)}</code></div>`;
+    });
+    const frame = w.querySelector(".vplayer__frame");
+    w.querySelector(".vplayer__fs").addEventListener("click", () => toggleFs(frame, v));
+    w.querySelector(".vplayer__exit").addEventListener("click", exitFs);
+    v.addEventListener("dblclick", () => toggleFs(frame, v));
+    let idleT;                                                       // exit button fades when the mouse rests
+    frame.addEventListener("mousemove", () => {
+      frame.classList.remove("fs-idle"); clearTimeout(idleT);
+      idleT = setTimeout(() => frame.classList.add("fs-idle"), 2500);
     });
     openModal(w, "video");
     v.play().catch(() => {});
+  }
+  const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+  function exitFs() {
+    if (!fsEl()) return;
+    (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+  }
+  function toggleFs(frame, v) {
+    if (fsEl()) return exitFs();
+    const req = frame.requestFullscreen || frame.webkitRequestFullscreen;
+    if (req) req.call(frame);
+    else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen();   // iPhone: native player with its own Done button
   }
   vcards.forEach((c, i) => {
     c.addEventListener("click", () => playVideo(i));
@@ -357,7 +393,8 @@
       .then(a => {
         const c = a && a[0];
         if (!c || !c.sha) throw 0;
-        gc.innerHTML = dot + "GIT · " + c.sha.slice(0, 7).toUpperCase() + " · " + ago(new Date(c.commit.committer.date));
+        gc.innerHTML = dot;
+        gc.append("GIT · " + String(c.sha).slice(0, 7).toUpperCase() + " · " + ago(new Date(c.commit.committer.date)));
       })
       .catch(() => { gc.innerHTML = dot + "GIT · MAIN BRANCH"; });
   })();
@@ -368,7 +405,7 @@
     e.preventDefault();
     blip(700, .05); setTimeout(() => blip(950, .06), 90);
     const nm = $("#cName").value, em = $("#cEmail").value, ms = $("#cMsg").value;
-    location.href = `mailto:${ME}?subject=Portfolio inquiry from ${encodeURIComponent(nm)}&body=${encodeURIComponent(ms + "\n\n— " + nm + " (" + em + ")")}`;
+    location.href = `mailto:${ME}?subject=Portfolio inquiry from ${encodeURIComponent(nm)}&body=${encodeURIComponent(ms + "\n\nFrom: " + nm + " (" + em + ")")}`;
     const b = e.target.querySelector("button");
     b.textContent = "Opening email client…";
     setTimeout(() => (b.textContent = "Send →"), 3000);
