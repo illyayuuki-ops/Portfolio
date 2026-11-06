@@ -11,6 +11,22 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>John Raphael Pababero | IT Portfolio</title>
 <meta name="description" content="Interactive 3D portfolio of John Raphael G. Pababero, a BSIT student, web developer, networking specialist, and game developer.">
+<link rel="canonical" href="https://illyayuuki-ops.github.io/Portfolio/">
+<meta name="theme-color" content="#05080f">
+<!-- link previews (Messenger, LinkedIn, Facebook, Discord, X) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="John Raphael Pababero">
+<meta property="og:title" content="John Raphael Pababero | IT Portfolio">
+<meta property="og:description" content="BSIT student at LCC Tanauan building full-stack web apps, library systems, and games. Six projects with full video walkthroughs. Open to OJT.">
+<meta property="og:url" content="https://illyayuuki-ops.github.io/Portfolio/">
+<meta property="og:image" content="https://illyayuuki-ops.github.io/Portfolio/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="John Raphael Pababero, IT Portfolio: a glass crystal on a deep space background">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="John Raphael Pababero | IT Portfolio">
+<meta name="twitter:description" content="Full-stack web apps, library systems, and games. Six projects with full video walkthroughs. Open to OJT.">
+<meta name="twitter:image" content="https://illyayuuki-ops.github.io/Portfolio/assets/og-image.png">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◈</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
@@ -108,7 +124,7 @@
       </div>
     </div>
     <div class="hero__stats mono">
-      <div><b data-count="4">0</b><span>PROJECTS</span></div>
+      <div><b data-count="6">0</b><span>PROJECTS</span></div>
       <div><b data-count="8">0</b><span>CERTIFICATES</span></div>
       <div><b data-count="12">0</b><span>TECHNOLOGIES</span></div>
     </div>
@@ -208,10 +224,14 @@
     </div>
 
     <div class="carousel__info glass reveal" id="carInfo">
-      <div class="carousel__meta mono"><span id="carIdx">01 / 03</span><span id="carRole">FULL-STACK</span></div>
-      <h3 id="carTitle">Ingredient Tracking System</h3>
-      <p id="carDesc">Inventory & dish-recommendation web application with secure auth and real-time stock logic.</p>
+      <div class="carousel__meta mono"><span id="carIdx">01 / 06</span><span id="carRole">FULL-STACK</span></div>
+      <h3 id="carTitle">Ingredients Tracking System</h3>
+      <p id="carDesc">Food ingredient tracking with live stock levels, secure login, and dish recommendations.</p>
       <div class="tags mono" id="carTags"><span>PHP</span><span>MySQL</span><span>PostgreSQL</span></div>
+      <div class="carousel__actions mono">
+        <button type="button" class="car-act car-act--main" id="carCase">◈ CASE STUDY</button>
+        <button type="button" class="car-act" id="carWatch">▶ WATCH WALKTHROUGH</button>
+      </div>
     </div>
   </section>
 
@@ -255,7 +275,7 @@
         <div class="vid__meta mono"><span>V·02</span><b>DEPLOYED</b></div>
         <h3>Aether LMS · Library Management System</h3>
       </article>
-      <article class="vid glass reveal" tabindex="0" role="button" aria-label="Play Library Service Desk" data-video="assets/videos/library-service-desk.mp4" data-n="03" data-tag="SYSTEM" data-dur="2:29" data-cap="Full walkthrough of the library front-desk service workflow.">  <!-- ✎ EDIT title / caption -->
+      <article class="vid glass reveal" tabindex="0" role="button" aria-label="Play Library Service Desk" data-video="assets/videos/library-service-desk.mp4" data-n="03" data-tag="SYSTEM" data-dur="2:29" data-cap="Full walkthrough of a library system with scan-to-borrow circulation, a public catalog, attendance logging, and reports.">  <!-- ✎ EDIT title / caption -->
         <div class="vid__frame">
           <video muted playsinline preload="metadata" tabindex="-1" src="assets/videos/library-service-desk.mp4#t=0.5"></video>
           <span class="vid__play"><i></i></span>
@@ -264,7 +284,7 @@
         <div class="vid__meta mono"><span>V·03</span><b>SYSTEM</b></div>
         <h3>Library Service Desk</h3>
       </article>
-      <article class="vid glass reveal" tabindex="0" role="button" aria-label="Play School Department Desk" data-video="assets/videos/school-department-desk.mp4" data-n="04" data-tag="SYSTEM" data-dur="2:14" data-cap="Full walkthrough of a department office system for handling school requests.">  <!-- ✎ EDIT title / caption -->
+      <article class="vid glass reveal" tabindex="0" role="button" aria-label="Play School Department Desk" data-video="assets/videos/school-department-desk.mp4" data-n="04" data-tag="SYSTEM" data-dur="2:14" data-cap="Full walkthrough of a school-wide service desk where students file requests and each office tracks its own queue.">  <!-- ✎ EDIT title / caption -->
         <div class="vid__frame">
           <video muted playsinline preload="metadata" tabindex="-1" src="assets/videos/school-department-desk.mp4#t=0.5"></video>
           <span class="vid__play"><i></i></span>
@@ -307,7 +327,7 @@
         <div class="resume__stats mono reveal">
           <div><b>BSIT</b><span>SINCE 2024</span></div>
           <div><b>08</b><span>CERTIFICATIONS</span></div>
-          <div><b>3+</b><span>SHIPPED PROJECTS</span></div>
+          <div><b>06</b><span>PROJECTS</span></div>
         </div>
         <div class="resume__btns reveal">
           <a href="assets/resume/John_Raphael_Pababero_Resume.pdf" class="btn" download>↓ Download résumé (PDF)</a>
@@ -386,6 +406,7 @@
 </div>
 
 <script src="js/vendor/three.min.js"></script>
+<script src="js/projects.js"></script>
 <script src="js/three-scenes.js"></script>
 <script src="js/main.js"></script>
 </body>

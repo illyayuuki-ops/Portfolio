@@ -44,7 +44,6 @@
   /* ------- page router ------- */
   const ORDER = ["home","intro","about","skills","projects","certificates","videos","resume","contact"];
   const links = $$("[data-fnav]");
-  const idxEl = $("#pageIdx");
   let current = null;
 
   const reveals = id => {
@@ -72,7 +71,6 @@
     page.scrollTop = 0;
     links.forEach(l => l.classList.toggle("act", l.dataset.fnav === id));
     document.body.classList.toggle("deck", id !== "home");
-    if (idxEl) idxEl.textContent = String(ORDER.indexOf(id) + 1).padStart(2, "0") + " / " + String(ORDER.length).padStart(2, "0");
     edgeSync(ORDER.indexOf(id));
     history.replaceState(null, "", "#" + id);
     if (!silent) blip(680 + ORDER.indexOf(id) * 50, .06);
@@ -88,9 +86,6 @@
     if (current === "home") { if (d > 0) window.__enterDeck(); return; }
     showPage(DECK[(DECK.indexOf(current) + d + DECK.length) % DECK.length]);
   };
-  const pp = $("#prevPage"), pn = $("#nextPage");
-  pp && pp.addEventListener("click", () => step(-1));
-  pn && pn.addEventListener("click", () => step(1));
   $$('a[href^="#"]').forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
     showPage(a.getAttribute("href").slice(1));
@@ -128,8 +123,6 @@
     window.__shatterCrystal && window.__shatterCrystal();
     setTimeout(() => showPage("intro"), 680);
   };
-  const enterBtn = $("#enterBtn");
-  enterBtn && enterBtn.addEventListener("click", window.__enterDeck);
 
   /* ------- space particles (stars + drifting hexagons) ------- */
   (() => {
@@ -311,6 +304,7 @@
       <div class="vplayer__row">
         <div><h3 class="modal__title">${title}</h3><p>${esc(d.cap)}</p></div>
         <div class="vplayer__nav mono">
+          ${caseOf(d.video) >= 0 ? '<button type="button" class="vplayer__case" aria-label="Open case study">◈ CASE STUDY</button>' : ""}
           <button type="button" class="vplayer__fs" aria-label="Fullscreen">⛶ FULLSCREEN</button>
           <button type="button" data-step="-1" aria-label="Previous video">‹ PREV</button>
           <em>${String(vI + 1).padStart(2, "0")} / ${String(vcards.length).padStart(2, "0")}</em>
@@ -325,6 +319,8 @@
     const frame = w.querySelector(".vplayer__frame");
     w.querySelector(".vplayer__fs").addEventListener("click", () => toggleFs(frame, v));
     w.querySelector(".vplayer__exit").addEventListener("click", exitFs);
+    const cb = w.querySelector(".vplayer__case");
+    cb && cb.addEventListener("click", () => { exitFs(); openCase(caseOf(d.video)); });
     v.addEventListener("dblclick", () => toggleFs(frame, v));
     let idleT;                                                       // exit button fades when the mouse rests
     frame.addEventListener("mousemove", () => {
@@ -352,6 +348,49 @@
     tv && tv.addEventListener("error", () => c.classList.add("vid--nothumb"));
   });
 
+  /* ------- case studies: 04 Projects → pop-up (content lives in js/projects.js) ------- */
+  const PR = window.PROJECTS || [];
+  const pad2 = n => String(n).padStart(2, "0");
+  const fileOf = src => String(src || "").split("/").pop();
+  function caseOf(src) { return PR.findIndex(p => p.video === fileOf(src)); }
+  function videoOf(p) { return vcards.findIndex(c => fileOf(c.dataset.video) === p.video); }
+  let cI = 0;
+  function openCase(i) {
+    if (!PR.length) return;
+    cI = (i + PR.length) % PR.length;
+    const p = PR[cI], vi = videoOf(p);
+    const w = document.createElement("div"); w.className = "case";
+    w.innerHTML = `
+      <p class="modal__kicker mono"><span>${pad2(cI + 1)} / ${pad2(PR.length)}</span>CASE STUDY · ${esc(p.role)}</p>
+      <h3 class="modal__title">${esc(p.t)}</h3>
+      <div class="tags mono case__tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join("")}${p.wip ? '<span class="vid__wip">UNFINISHED</span>' : ""}</div>
+      <div class="case__grid">
+        <section class="case__block"><h4 class="mono"><i>01</i>${p.kind === "game" ? "THE IDEA" : "THE PROBLEM"}</h4><p>${esc(p.problem)}</p></section>
+        <section class="case__block"><h4 class="mono"><i>02</i>MY ROLE</h4><p>${esc(p.myrole)}</p></section>
+        <section class="case__block case__block--wide"><h4 class="mono"><i>03</i>WHAT I BUILT</h4><ul>${p.built.map(b => `<li>${esc(b)}</li>`).join("")}</ul></section>
+        <section class="case__block case__block--wide case__block--out"><h4 class="mono"><i>04</i>OUTCOME</h4><p>${esc(p.outcome)}</p></section>
+      </div>
+      <div class="case__foot">
+        ${vi >= 0 ? `<button type="button" class="btn case__watch">▶ Watch walkthrough <em class="mono">${esc(vcards[vi].dataset.dur)}</em></button>` : ""}
+        <div class="vplayer__nav mono">
+          <button type="button" data-step="-1" aria-label="Previous case study">‹ PREV</button>
+          <em>${pad2(cI + 1)} / ${pad2(PR.length)}</em>
+          <button type="button" data-step="1" aria-label="Next case study">NEXT ›</button>
+        </div>
+      </div>`;
+    w.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => openCase(cI + +b.dataset.step)));
+    const wb = w.querySelector(".case__watch");
+    wb && wb.addEventListener("click", () => playVideo(vi));
+    openModal(w, "case");
+  }
+  window.__openCase = openCase;
+  const carIdx = () => +($("#carInfo") && $("#carInfo").dataset.idx) || 0;
+  $("#carCase") && $("#carCase").addEventListener("click", () => openCase(carIdx()));
+  $("#carWatch") && $("#carWatch").addEventListener("click", () => {
+    const p = PR[carIdx()], vi = p ? videoOf(p) : -1;
+    if (vi >= 0) playVideo(vi);
+  });
+
   addEventListener("keydown", e => {
     if (e.key === "Escape") { closeModal(); shut(); return; }
     if (lb.classList.contains("open") && lbSet.length > 1) {
@@ -361,12 +400,15 @@
                && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) {
       if (e.key === "ArrowRight" && e.shiftKey) playVideo(vI + 1);   // plain arrows stay with the player (seek)
       if (e.key === "ArrowLeft" && e.shiftKey) playVideo(vI - 1);
+    } else if (modal.classList.contains("open") && mBox.classList.contains("modal__box--case")) {
+      if (e.key === "ArrowRight") openCase(cI + 1);
+      if (e.key === "ArrowLeft") openCase(cI - 1);
     }
   });
 
   /* ------- magnetic UI ------- */
   if (fine) {
-    $$(".btn, .radial__core, .r-item, .r-soc, .snd, .gchip, .pagenav button").forEach(el => {
+    $$(".btn, .snd, .gchip").forEach(el => {
       el.classList.add("magnetic");
       el.addEventListener("pointermove", e => {
         const r = el.getBoundingClientRect();

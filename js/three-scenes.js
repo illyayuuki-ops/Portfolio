@@ -205,67 +205,14 @@
   })();
 
   /* ============================================================
-     SCENE C - NAV GEM - a tiny live 3D diamond as the menu core
-     Spins idle, flashes + bursts of spin when the menu opens.
-     Falls back to the ◈ glyph if WebGL is unavailable.
-  ============================================================ */
-  (() => {
-    const cv = document.getElementById("gemCanvas");
-    const core = document.getElementById("radialBtn");
-    if (!cv || !core) return;
-    try {
-      const renderer = new THREE.WebGLRenderer({ canvas: cv, alpha: true, antialias: true });
-      renderer.setSize(72, 72, false);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-      const scene = new THREE.Scene();
-      const cam = new THREE.PerspectiveCamera(40, 1, 0.1, 10);
-      cam.position.z = 3.2;
-
-      const gem = new THREE.Group();
-      const geo = new THREE.OctahedronGeometry(0.95, 0);                 // a real diamond = octahedron
-      const solidMat = new THREE.MeshPhongMaterial({ color: 0x0d2c3e, emissive: 0x0b3b52, transparent: true, opacity: 0.55, shininess: 90 });
-      const wireMat  = new THREE.LineBasicMaterial({ color: SKY, transparent: true });
-      const solid = new THREE.Mesh(geo, solidMat);
-      const wire  = new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireMat);
-      gem.add(solid); gem.add(wire); scene.add(gem);
-
-      scene.add(new THREE.AmbientLight(0x9fd9ff, 0.9));
-      const l1 = new THREE.DirectionalLight(0xffffff, 1.1); l1.position.set(2, 3, 4); scene.add(l1);
-      const l2 = new THREE.DirectionalLight(SKY, 0.8);      l2.position.set(-3, -2, -2); scene.add(l2);
-
-      let energy = 0, t0 = performance.now();
-      window.__gemShine = () => { energy = 1; };           // main.js calls this when the menu opens
-      core.classList.add("gl");                            // swap ◈ glyph for live WebGL
-
-      function frame(t) {
-        const dt = Math.min((t - t0) / 1000, 0.05); t0 = t;
-        energy *= 1 - dt * 1.7; if (energy < 0.001) energy = 0;
-        const pop = 1 + energy * 0.22 * Math.sin(Math.min(energy, 1) * Math.PI);
-        gem.rotation.y += dt * (0.7 + energy * 6.5);
-        gem.rotation.x = 0.38 + Math.sin(t / 1500) * 0.08;  // gentle float
-        gem.position.y = Math.sin(t / 1100) * 0.05;
-        gem.scale.setScalar(pop);
-        wireMat.opacity = 0.85 + energy * 0.15;
-        solidMat.emissive.setRGB(0.04 + energy * 0.15, 0.23 + energy * 0.3, 0.32 + energy * 0.35);
-        renderer.render(scene, cam);
-        requestAnimationFrame(frame);
-      }
-      requestAnimationFrame(f => { t0 = f; frame(f); });
-    } catch (e) { /* WebGL missing - the ◈ glyph remains */ }
-  })();
-
-/* ============================================================
      SCENE B - PROJECT CAROUSEL (drag the ring, snap to card)
   ============================================================ */
   (() => {
     const canvas = document.getElementById("carouselCanvas");
     if (!canvas) return;
 
-    const PROJECTS = [
-      { t: "Ingredient Tracking System", d: "Built end-to-end: PHP backend, PostgreSQL/MySQL schemas, secure auth, real-time stock tracking & smart dish recommendations.", tags: ["PHP", "MySQL", "PostgreSQL"], role: "FULL-STACK" },
-      { t: "Aether LMS · LCCTlibTrack", d: "Deployed at LCC Tanauan: client-server workstation monitoring with session logging & institutional usage reporting.", tags: ["Networking", "SysAdmin", "Desktop"], role: "DEVELOPER" },
-      { t: "2.5D Tactical Strategy Game", d: "Turn-based auto-battler built with Flutter/Dart and JS, with Blender-modeled 3D assets, custom pixel-art sprites, and physics.", tags: ["Flutter", "Dart", "JS", "Blender"], role: "GAME DEV" },
-    ];
+    const PROJECTS = window.PROJECTS || [];                     // js/projects.js
+    if (!PROJECTS.length) return;
 
     const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -289,10 +236,10 @@
       x.beginPath(); x.moveTo(56, 138); x.lineTo(968, 138); x.stroke();
       // title
       x.font = "600 62px 'Space Grotesk', sans-serif"; x.fillStyle = "#eaf4ff";
-      wrapText(x, p.t, 56, 230, 912, 72);
+      const tEnd = wrapText(x, p.t, 56, 230, 912, 72);
       // desc
       x.font = "400 36px 'Space Grotesk', sans-serif"; x.fillStyle = "rgba(127,147,177,1)";
-      wrapText(x, p.d, 56, 340, 912, 50);
+      wrapText(x, p.d, 56, tEnd + 92, 912, 50);
       // role tag
       x.font = "400 30px 'IBM Plex Mono', monospace"; x.fillStyle = "#5ee3ff";
       x.fillText("▸ " + p.role, 56, 565);
@@ -315,11 +262,13 @@
         else line = test;
       }
       x.fillText(line, px, yy);
+      return yy;
     }
 
     const group = new THREE.Group();
     scene.add(group);
-    const N = PROJECTS.length, radius = 2.05, step = (Math.PI * 2) / N;
+    const N = PROJECTS.length, step = (Math.PI * 2) / N;
+    const radius = Math.max(2.05, 1.65 / Math.tan(step / 2) + 0.35);   // wide enough that 3.3-wide cards never touch
     const cards = PROJECTS.map((p, i) => {
       const m = new THREE.Mesh(
         new THREE.PlaneGeometry(3.3, 2.05),
@@ -333,14 +282,14 @@
     });
     // ground reflection glow
     const glow = new THREE.Mesh(
-      new THREE.CircleGeometry(3.2, 48),
+      new THREE.CircleGeometry(radius + 1.15, 64),
       new THREE.MeshBasicMaterial({ color: SKY, transparent: true, opacity: 0.05 })
     );
     glow.rotation.x = -Math.PI / 2; glow.position.y = -1.45;
     scene.add(glow);
 
     // ---- drag with inertia + snap ----
-    let vel = 0, dragging = false, px = 0, targetRot = 0, focused = 0;
+    let vel = 0, dragging = false, px = 0, downX = 0, targetRot = 0, focused = 0, pos = 0;   // pos = unbounded card index (no long spin when wrapping)
     const speed = 0.0045;
     const hint = document.getElementById("carouselHint");
 
@@ -351,8 +300,10 @@
       desc: document.getElementById("carDesc"),
       tags: document.getElementById("carTags"),
     };
+    const infoBox = document.getElementById("carInfo");
     const updateInfo = () => {
       const p = PROJECTS[focused];
+      if (infoBox) infoBox.dataset.idx = focused;
       info.idx.textContent = `${String(focused + 1).padStart(2, "0")} / ${String(N).padStart(2, "0")}`;
       info.role.textContent = p.role;
       info.title.textContent = p.t;
@@ -362,13 +313,15 @@
 
     // Front-facing card = where (i * step + rotation) ≈ 0  →  rotY = -focused * step
     const snap = () => {
-      focused = ((-Math.round(group.rotation.y / step)) % N + N) % N;
-      targetRot = -focused * step;
+      pos = -Math.round(group.rotation.y / step);
+      focused = (pos % N + N) % N;
+      targetRot = -pos * step;
       updateInfo();
     };
     const spinTo = (dir) => {
-      focused = ((focused + dir) % N + N) % N;   // button-driven: jump straight to target
-      targetRot = -focused * step;
+      pos += dir;                                 // button-driven: jump straight to target
+      focused = (pos % N + N) % N;
+      targetRot = -pos * step;
       vel = dir * 0.015;                          // small kick for momentum feel
       updateInfo();
     };
@@ -376,11 +329,28 @@
     document.getElementById("carNext")?.addEventListener("click", () => spinTo(1));
 
     canvas.addEventListener("pointerdown", e => {
-      dragging = true; px = e.clientX; vel = 0;
+      dragging = true; px = downX = e.clientX; vel = 0;
       canvas.setPointerCapture(e.pointerId); canvas.classList.add("grabbing");
       if (hint) hint.style.opacity = 0;
     });
-    addEventListener("pointerup", () => { if (dragging) { dragging = false; canvas.classList.remove("grabbing"); snap(); } });
+    const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+    addEventListener("pointerup", e => {
+      if (!dragging) return;
+      dragging = false; canvas.classList.remove("grabbing");
+      if (Math.abs(e.clientX - downX) < 6) {                     // a click, not a drag
+        const r = canvas.getBoundingClientRect();
+        ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+        ray.setFromCamera(ndc, camera);
+        const hit = ray.intersectObjects(cards)[0];
+        if (hit) {
+          const i = cards.indexOf(hit.object);
+          if (i === focused) { window.__openCase && window.__openCase(i); return; }
+          let d = i - focused; if (d > N / 2) d -= N; if (d < -N / 2) d += N;
+          return spinTo(d);                                       // side card: bring it to the front
+        }
+      }
+      snap();
+    });
     canvas.addEventListener("pointermove", e => {
       if (dragging) { vel = (e.clientX - px) * speed; group.rotation.y += vel; px = e.clientX; }
     });
@@ -389,7 +359,8 @@
       const w = canvas.clientWidth, h = canvas.clientHeight;
       renderer.setSize(w, h, false);
       camera.aspect = w / h; camera.updateProjectionMatrix();
-      camera.position.z = w < 700 ? 6.6 : 5.4;
+      const fitD = 3.75 / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2)) * camera.aspect);   // whole front card in view on narrow screens
+      camera.position.z = radius + Math.max(3.35, fitD);
     };
     fit();
     addEventListener("resize", fit);
@@ -410,7 +381,8 @@
         // face-forward emphasis + gentle float
         const behind = Math.cos((i * step) + group.rotation.y);
         m.position.y = Math.sin(t * 1.2 + i) * 0.05;
-        m.material.opacity = 0.35 + Math.max(0, behind) * 0.65;
+        m.material.opacity = 0.06 + Math.pow(Math.max(0, behind), 1.6) * 0.94;   // back of the ring fades out
+        m.visible = behind > -0.2;
       });
       glow.material.opacity = 0.04 + Math.sin(t * 2) * 0.015;
       renderer.render(scene, camera);

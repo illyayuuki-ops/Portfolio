@@ -1,0 +1,112 @@
+/* ============================================================
+   PROJECTS - single source of truth for the 3D carousel (04)
+   and the case-study pop-ups. `video` matches a card on page 06.
+   t     = title            d    = short line (carousel card)
+   role  = label            tags = stack
+   kind  = "app" | "game"   (games show "THE IDEA" instead of "THE PROBLEM")
+============================================================ */
+window.PROJECTS = [
+  {
+    t: "Ingredients Tracking System",
+    role: "FULL-STACK",
+    tags: ["PHP", "MySQL", "PostgreSQL"],
+    video: "ingredients-tracking.mp4",
+    d: "Food ingredient tracking with live stock levels, secure login, and dish recommendations.",
+    kind: "app",
+    problem: "Kitchens lose track of what is in stock. Ingredients run out without warning or go to waste, and nobody can say which dishes can still be made today.",
+    built: [
+      "Ingredient inventory with real-time stock tracking",
+      "Dish recommendations based on the ingredients on hand",
+      "Secure login and a staff dashboard",
+      "Relational schemas designed for both MySQL and PostgreSQL",
+    ],
+    myrole: "Full-stack developer. I designed the database, wrote the PHP back end, and built the dashboard.",
+    outcome: "A working web app that shows stock at a glance and suggests dishes that can be made with what is available.",
+  },
+  {
+    t: "Aether LMS",
+    role: "DEPLOYED",
+    tags: ["TypeScript", "Electron", "Node.js", "PostgreSQL"],
+    video: "aether-lms.mp4",
+    d: "Workstation monitoring for the LCC Tanauan library: kiosk sign-in on every PC, session logging, and usage reports.",
+    kind: "app",
+    problem: "The library had no reliable record of who used each computer, for how long, or how busy the lab was over the semester.",
+    built: [
+      "A full-screen Electron kiosk that students sign in to on each library PC",
+      "An Express API on PostgreSQL that tracks live sessions with heartbeats",
+      "Session time limits and inactivity timeouts set by the admin",
+      "Usage analytics: daily activity, usage patterns, and most active students",
+    ],
+    myrole: "Developer. I built the kiosk client, the API and database, and set up the client-server network on the lab PCs.",
+    outcome: "Deployed on the student computers at La Consolacion College Tanauan, giving the library real usage logs for institutional reporting.",
+  },
+  {
+    t: "Library Service Desk",
+    role: "LIBRARY SYSTEM",
+    tags: ["TypeScript", "Node.js", "PostgreSQL"],
+    video: "library-service-desk.mp4",
+    d: "A complete library system: scan-to-borrow circulation, a public catalog, attendance logging, and reports.",
+    kind: "app",
+    problem: "Running a library desk on paper forms makes borrowing slow, overdue books hard to follow up, and monthly statistics painful to put together.",
+    built: [
+      "Scan-to-borrow circulation with loan rules per patron type",
+      "Catalog management plus a public OPAC anyone can search",
+      "Visitor attendance logging by student number",
+      "Dashboard, reservations, overdue watchlist, and exportable reports",
+      "Role-based access and a built-in library assistant chat",
+    ],
+    myrole: "Developer. Built on the same TypeScript, Node.js, and PostgreSQL stack as Aether LMS.",
+    outcome: "One system for the whole desk workflow: borrow, return, search, register, and report.",
+  },
+  {
+    t: "School Department Desk",
+    role: "SERVICE DESK",
+    tags: ["PHP", "PostgreSQL"],
+    video: "school-department-desk.mp4",
+    d: "A school-wide service desk: students file requests, and each office works its own queue with response targets.",
+    kind: "app",
+    problem: "Students often do not know which office handles their concern, and requests get lost between departments with no follow-up.",
+    built: [
+      "Request filing for students, routed to the right office out of 12 departments",
+      "An office queue with priorities, response-time targets, and escalation",
+      "Role-based desks for students, counselors, and administrators",
+      "Ticket register, service analytics, audit trail, and account management",
+    ],
+    myrole: "Developer. I built the PHP back end, the PostgreSQL database, and the role-based interfaces.",
+    outcome: "Every request has a clear owner and timeline, and staff see their whole queue at a glance.",
+  },
+  {
+    t: "Void Sigil",
+    role: "GAME DEV",
+    tags: ["Flutter", "Dart", "JavaScript", "Pixel art"],
+    video: "chess-td-void.mp4",
+    d: "An astral chess auto-battler: draft your pieces, shape the board, then let the battle play out.",
+    kind: "game",
+    problem: "A chess-inspired auto-battler where the strategy happens before the fight. You draft pieces and arrange the board, then the battle resolves on its own.",
+    built: [
+      "Turn-based auto-battle on a chess-style board",
+      "A draft and placement phase before each round",
+      "Custom pixel-art sprite animations and physics effects",
+      "Single player that runs fully offline, no server needed",
+    ],
+    myrole: "Game developer. I handled the mechanics, the art direction, and the sprite animation.",
+    outcome: "A playable build that covers the full loop, from the title screen to the battle.",
+  },
+  {
+    t: "Snake & Ladder",
+    role: "GAME DEV · WIP",
+    tags: ["Blender", "Flutter", "Dart"],
+    video: "snake-ladder.mp4",
+    d: "A 2.5D take on the classic board game, with custom 3D board assets. Still in development.",
+    kind: "game",
+    wip: true,
+    problem: "Rebuild a game everyone knows with a 2.5D look, using custom 3D assets instead of a flat board.",
+    built: [
+      "Custom 3D board and assets modeled in Blender",
+      "Dice rolls, movement, and the snake and ladder rules",
+      "Game logic built with Flutter and Dart",
+    ],
+    myrole: "Game developer and 3D artist.",
+    outcome: "An early build that is still in development. The video shows where it stands today.",
+  },
+];
